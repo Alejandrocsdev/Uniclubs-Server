@@ -19,6 +19,8 @@ app.use(express.json())
 app.use(cors)
 // Mount all API routes under /api
 app.use('/api', routes)
+// Handle browser's automatic favicon.ico requests with 204 (No Content)
+app.get('/favicon.ico', (req, res) => res.sendStatus(204))
 // Health check endpoint to confirm the server is running
 app.get('/', (req, res) => res.status(200).json({ message: 'Server is up and running.' }))
 // Catch-all route handler for undefined endpoints (404 Not Found)

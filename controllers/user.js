@@ -3,7 +3,7 @@ const { User } = require('../models')
 // Middlewares
 const { asyncError } = require('../middlewares')
 // Utilities
-const { omitFields } = require('../utils')
+const { omitFields, encrypt } = require('../utils')
 // Errors
 const CustomError = require('../errors/CustomError')
 
@@ -51,7 +51,7 @@ class UserController {
       throw new CustomError(409, 'Username already exists.')
     }
 
-    const hashedPwd = await bcrypt.hash(password, 10)
+    const hashedPwd = await encrypt.hash(password, 10)
     const newUser = await User.create({ username, password: hashedPwd, email })
 
     res.status(201).json({ message: `User ${newUser.id} created successfully.`, userId: newUser.id })

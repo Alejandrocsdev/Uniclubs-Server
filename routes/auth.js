@@ -3,9 +3,13 @@ const router = Router()
 
 const { authController } = require('../controllers')
 
-// Passport
-const { pwdSignInAuth } = require('../config/passport')
+// Middlewares
+const { jwtAuth } = require('../middlewares')
+const { signInAuth } = require('../config/passport')
 
-router.post('/sign-in/pwd', pwdSignInAuth, authController.signIn)
+router.get('/me', jwtAuth, authController.getAuthUser)
+router.post('/refresh', authController.refresh)
+router.post('/sign-in', signInAuth, authController.signIn)
+router.post('/sign-up', authController.signUp)
 
 module.exports = router

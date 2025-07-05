@@ -6,6 +6,8 @@ const express = require('express')
 const app = express()
 // Cross-Origin Resource Sharing
 const cors = require('./config/cors')
+// Cookie Parser
+const cookieParser = require('cookie-parser')
 // Routes
 const routes = require('./routes')
 // Middlewares: Default Route & Global Error
@@ -13,10 +15,12 @@ const { defaultRoute, globalError } = require('./middlewares')
 // Server URL
 const { serverUrl } = require('./utils')
 
-// Parse incoming JSON requests and attach the data to req.body
-app.use(express.json())
 // Enable CORS with custom configuration
 app.use(cors)
+// Parse cookies attached to the client request
+app.use(cookieParser())
+// Parse incoming JSON requests and attach the data to req.body
+app.use(express.json())
 // Mount all API routes under /api
 app.use('/api', routes)
 // Handle browser's automatic favicon.ico requests with 204 (No Content)

@@ -23,6 +23,10 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true
       },
+      refresh_token: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

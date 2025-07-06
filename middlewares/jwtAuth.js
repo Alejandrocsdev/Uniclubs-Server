@@ -3,7 +3,7 @@ const { User } = require('../models')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { omitFields, encrypt } = require('../utils')
+const { jwt, excludeFields } = require('../utils')
 
 const jwtAuth = async (req, res, next) => {
   try {
@@ -13,17 +13,14 @@ const jwtAuth = async (req, res, next) => {
     const token = authHeader.split(' ')[1]
     if (!token) throw new CustomError(401, 'Missing access token')
 
-    const payload = encrypt.verifyToken(token, 'at')
-    if (!payload || !payload.id) throw new CustomError(401, 'Invalid token payload')
-
-    const currentTime = Math.floor(Date.now() / 1000)
-    if (payload.exp && payload.exp < currentTime) throw new CustomError(401, 'Access token expired')
+    // Error handles by jwtError
+    const { id } = jwt.verifyToken(token, 'at')
 
     const { ts } = req.query
-    const exclude = omitFields(ts, ['password'])
+    const exclude = excludeFields(ts, ['password'])
 
-    const user = await User.findByPk(payload.id, { attributes: { exclude } })
-    if (!user) throw new CustomError(403, 'User not found')
+    const user = await User.findByPk(id, { attributes: { exclude } })
+    if (!user || id !== user.id) throw new CustomError(403, 'Invalid access token or user mismatch')
 
     req.user = user.toJSON()
     next()

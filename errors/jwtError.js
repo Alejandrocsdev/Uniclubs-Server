@@ -1,20 +1,27 @@
+// Libraries
+const { TokenExpiredError, NotBeforeError, JsonWebTokenError } = require('jsonwebtoken')
 // Errors
 const CustomError = require('./CustomError')
 
-const jwtError = (error) => {
-  switch (error.name) {
-    case 'TokenExpiredError':
-      throw new CustomError(401, 'Token has expired')
+const jwtError = error => {
+  if (!(error instanceof JsonWebTokenError)) return
 
-    case 'JsonWebTokenError':
-      throw new CustomError(403, 'Invalid token')
+  const { jwtType } = error
 
-    case 'NotBeforeError':
-      throw new CustomError(403, 'Token not active yet')
-
-    default:
-      throw new CustomError(500, 'Token verification failed (util: encrypt)')
+  // Subclass of JsonWebTokenError
+  if (error instanceof TokenExpiredError) {
+    const token = jwtType === 'at' ? 'Access' : 'Refresh'
+    const statusCode = jwtType === 'at' ? 401 : 403
+    throw new CustomError(statusCode, `${token} token has expired (jwtError: TokenExpiredError)`)
   }
+
+  // Subclass of JsonWebTokenError
+  if (error instanceof NotBeforeError) {
+    throw new CustomError(403, 'Token not active yet (jwtError: NotBeforeError)')
+  }
+
+  // Generic JWT error (base class)
+  throw new CustomError(403, 'Invalid token (jwtError: JsonWebTokenError)')
 }
 
 module.exports = jwtError

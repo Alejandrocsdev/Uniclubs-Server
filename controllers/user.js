@@ -3,7 +3,7 @@ const { User } = require('../models')
 // Middlewares
 const { asyncError } = require('../middlewares')
 // Utilities
-const { omitFields, encrypt } = require('../utils')
+const { encrypt, excludeFields } = require('../utils')
 // Errors
 const CustomError = require('../errors/CustomError')
 
@@ -11,7 +11,7 @@ class UserController {
   getUsers = asyncError(async (req, res) => {
     const { ts } = req.query
 
-    const exclude = omitFields(ts, ['password'])
+    const exclude = excludeFields(ts, ['password'])
 
     const users = await User.findAll({ attributes: { exclude } })
 
@@ -22,7 +22,7 @@ class UserController {
     const { userId } = req.params
     const { ts } = req.query
 
-    const exclude = omitFields(ts, ['password'])
+    const exclude = excludeFields(ts, ['password'])
 
     const user = await User.findByPk(userId, { attributes: { exclude } })
     if (!user) throw new CustomError(404, 'User not found.')

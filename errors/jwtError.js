@@ -11,8 +11,8 @@ const jwtError = error => {
   // Subclass of JsonWebTokenError
   if (error instanceof TokenExpiredError) {
     const token = jwtType === 'at' ? 'Access' : 'Refresh'
-    const statusCode = jwtType === 'at' ? 401 : 403
-    throw new CustomError(statusCode, `${token} token has expired (jwtError: TokenExpiredError)`)
+    const code = jwtType === 'at' ? 401 : 403
+    throw new CustomError(code, `${token} token has expired (jwtError: TokenExpiredError)`)
   }
 
   // Subclass of JsonWebTokenError

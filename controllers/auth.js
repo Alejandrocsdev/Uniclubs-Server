@@ -5,12 +5,12 @@ const { asyncError } = require('../middlewares')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { jwt, cookie, encrypt, deleteFields } = require('../utils')
+const { jwt, cookie, encrypt } = require('../utils')
 
 class AuthController {
   getAuthUser = asyncError(async (req, res) => {
     const { user } = req
-    res.status(200).json({ message: 'Authenticated user retrieved successfully', user })
+    res.status(200).json({ message: 'Authenticated user retrieved successfully', user: user.getSafeData() })
   })
 
   refresh = asyncError(async (req, res) => {
@@ -44,9 +44,7 @@ class AuthController {
     // const { roles } = user
     // if (!roles) throw new CustomError(403, 'No role permissions found.')
 
-    const accessToken = jwt.signAccessToken(user.id)
-
-    res.status(200).json({ message: 'Sign in successful.', accessToken })
+    res.status(200).json({ message: 'Sign in successful.' })
   })
 
   signUp = asyncError(async (req, res) => {
@@ -56,11 +54,9 @@ class AuthController {
 
     const hashedPwd = await encrypt.hash(password)
 
-    const user = await User.create({ username, password: hashedPwd, email })
-    
-    const newUser = deleteFields(user, ['password'])
+    await User.create({ username, password: hashedPwd, email })
 
-    res.status(201).json({ message: 'User registered successfully.', user: newUser })
+    res.status(201).json({ message: 'User registered successfully.' })
   })
 }
 

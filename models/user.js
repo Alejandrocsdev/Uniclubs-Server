@@ -32,5 +32,11 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true
     }
   )
+
+  User.prototype.getSafeData = function () {
+    const { username, email } = this
+    return { username, email }
+  }
+
   return User
 }

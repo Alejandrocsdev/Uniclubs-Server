@@ -3,7 +3,7 @@ const { User } = require('../models')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { jwt, excludeFields } = require('../utils')
+const { jwt } = require('../utils')
 
 const jwtAuth = async (req, res, next) => {
   try {
@@ -16,16 +16,13 @@ const jwtAuth = async (req, res, next) => {
     // Error handles by jwtError
     const { id } = jwt.verifyToken(token, 'at')
 
-    const { ts } = req.query
-    const exclude = excludeFields(ts, ['password'])
-
-    const user = await User.findByPk(id, { attributes: { exclude } })
+    const user = await User.findByPk(id)
     if (!user || id !== user.id) throw new CustomError(403, 'Invalid access token or user mismatch')
 
-    req.user = user.toJSON()
+    req.user = user
     next()
-  } catch (err) {
-    next(err)
+  } catch (error) {
+    next(error)
   }
 }
 

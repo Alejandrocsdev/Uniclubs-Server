@@ -3,31 +3,26 @@ const { User } = require('../models')
 // Middlewares
 const { asyncError } = require('../middlewares')
 // Utilities
-const { encrypt, excludeFields } = require('../utils')
+const { encrypt } = require('../utils')
 // Errors
 const CustomError = require('../errors/CustomError')
 
 class UserController {
   getUsers = asyncError(async (req, res) => {
-    const { ts } = req.query
+    const users = await User.findAll()
 
-    const exclude = excludeFields(ts, ['password'])
+    const safeUsers = users.map(user => user.getSafeData())
 
-    const users = await User.findAll({ attributes: { exclude } })
-
-    res.status(200).json({ message: 'All users retrieved successfully.', users })
+    res.status(200).json({ message: 'All users retrieved successfully.', users: safeUsers })
   })
 
   getUser = asyncError(async (req, res) => {
     const { userId } = req.params
-    const { ts } = req.query
 
-    const exclude = excludeFields(ts, ['password'])
-
-    const user = await User.findByPk(userId, { attributes: { exclude } })
+    const user = await User.findByPk(userId)
     if (!user) throw new CustomError(404, 'User not found.')
 
-    res.status(200).json({ message: `User ${userId} retrieved successfully.`, user })
+    res.status(200).json({ message: `User ${userId} retrieved successfully.`, user: user.getSafeData() })
   })
 
   postUser = asyncError(async (req, res) => {
@@ -54,7 +49,7 @@ class UserController {
     const hashedPwd = await encrypt.hash(password, 10)
     const newUser = await User.create({ username, password: hashedPwd, email })
 
-    res.status(201).json({ message: `User ${newUser.id} created successfully.`, userId: newUser.id })
+    res.status(201).json({ message: `User ${newUser.id} created successfully.`, user: newUser.getSafeData() })
   })
 
   putUser = asyncError(async (req, res) => {
@@ -69,7 +64,7 @@ class UserController {
 
     await user.save()
 
-    res.status(200).json({ message: 'User updated successfully.', userId: user.id })
+    res.status(200).json({ message: 'User updated successfully.', user: user.getSafeData() })
   })
 
   deleteUser = asyncError(async (req, res) => {

@@ -12,7 +12,7 @@ function globalError(error, req, res, next) {
     error = customError
   }
 
-  res.status(error.code || 500).json({ message: error.message, ...(error.details && { details: error.details }) })
+  res.status(error.code).json({ message: error.message, details: error.details })
 }
 
 module.exports = globalError

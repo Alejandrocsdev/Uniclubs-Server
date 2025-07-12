@@ -10,7 +10,7 @@ class Encrypt {
       const salt = await bcrypt.genSaltSync(10)
       return await bcrypt.hash(data, salt)
     } catch (error) {
-      throw new CustomError(500, 'Hashing failed (util: encrypt)')
+      throw new CustomError(500, 'Hashing failed')
     }
   }
 
@@ -18,7 +18,7 @@ class Encrypt {
     try {
       return await bcrypt.compare(data, hashedData)
     } catch (error) {
-      throw new CustomError(500, 'Hash comparison failed (util: encrypt)')
+      throw new CustomError(500, 'Hash comparison failed')
     }
   }
 
@@ -26,7 +26,7 @@ class Encrypt {
     try {
       return crypto.randomBytes(32).toString('hex')
     } catch (error) {
-      throw new CustomError(500, 'Secret key generation failed (util: encrypt)')
+      throw new CustomError(500, 'Secret key generation failed')
     }
   }
 }

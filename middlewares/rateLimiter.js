@@ -4,7 +4,8 @@ const rateLimit = require('express-rate-limit')
 const rateLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
-  message: { message: 'Too many requests (rateLimiter)' },
+  // error.response.data (default structure)
+  message: { message: 'Too many requests' },
   statusCode: 429
 })
 

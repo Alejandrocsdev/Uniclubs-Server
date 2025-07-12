@@ -8,7 +8,7 @@ class Jwt {
     try {
       return jwt.sign({ id: Number(id) }, process.env.AT_SECRET, { expiresIn: '15m' })
     } catch (error) {
-      throw new CustomError(500, 'Access token generation failed (util: encrypt)')
+      throw new CustomError(500, 'Access token generation failed')
     }
   }
 
@@ -16,7 +16,7 @@ class Jwt {
     try {
       return jwt.sign({ id: Number(id) }, process.env.RT_SECRET, { expiresIn: '7d' })
     } catch (error) {
-      throw new CustomError(500, 'Refresh token generation failed (util: encrypt)')
+      throw new CustomError(500, 'Refresh token generation failed')
     }
   }
 
@@ -27,7 +27,7 @@ class Jwt {
     }
 
     const secret = secretMap[type]
-    if (!secret) throw new CustomError(500, `Unknown token type '${type}' (util: encrypt)`)
+    if (!secret) throw new CustomError(500, `Unknown token type '${type}'`)
 
     try {
       return jwt.verify(token, secret)

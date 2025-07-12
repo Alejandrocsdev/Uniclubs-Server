@@ -12,16 +12,17 @@ const jwtError = error => {
   if (error instanceof TokenExpiredError) {
     const token = jwtType === 'at' ? 'Access' : 'Refresh'
     const code = jwtType === 'at' ? 401 : 403
-    throw new CustomError(code, `${token} token has expired (jwtError: TokenExpiredError)`)
+    console.log('error.name:', error.name)
+    throw new CustomError(code, `${error.name}: ${token} token has expired`)
   }
 
   // Subclass of JsonWebTokenError
   if (error instanceof NotBeforeError) {
-    throw new CustomError(403, 'Token not active yet (jwtError: NotBeforeError)')
+    throw new CustomError(403, `${error.name}: Token not active yet`)
   }
 
   // Generic JWT error (base class)
-  throw new CustomError(403, 'Invalid token (jwtError: JsonWebTokenError)')
+  throw new CustomError(403, `${error.name}: Invalid token`)
 }
 
 module.exports = jwtError

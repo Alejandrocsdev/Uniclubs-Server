@@ -1,8 +1,8 @@
 class CustomError extends Error {
-  constructor(code, message, details) {
+  constructor(code = 500, message, details = null) {
     super(message)
     this.code = code
-    if (details) this.details = details
+    this.details = details
   }
 }
 

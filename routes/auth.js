@@ -15,4 +15,6 @@ router.post('/sign-in', rateLimiter, signInAuth, authController.signIn)
 // Without Credentials
 router.post('/sign-up', authController.signUp)
 
+router.post('/email/otp', authController.emailOtp)
+
 module.exports = router

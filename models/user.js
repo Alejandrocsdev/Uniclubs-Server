@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
-  User.prototype.getSafeData = function () {
+  User.prototype.getSafeData = () => {
     const { username, email } = this
     return { username, email }
   }

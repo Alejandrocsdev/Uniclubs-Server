@@ -6,6 +6,10 @@ const CustomError = require('../errors/CustomError')
 
 class Encrypt {
   async hash(data) {
+    if (typeof data !== 'string') {
+      throw new CustomError(400, 'Data to hash must be a string')
+    }
+    
     try {
       const salt = await bcrypt.genSaltSync(10)
       return await bcrypt.hash(data, salt)
@@ -27,6 +31,14 @@ class Encrypt {
       return crypto.randomBytes(32).toString('hex')
     } catch (error) {
       throw new CustomError(500, 'Secret key generation failed')
+    }
+  }
+
+  otp() {
+    try {
+      return crypto.randomInt(100000, 1000000)
+    } catch (error) {
+      throw new CustomError(500, 'OTP generation failed')
     }
   }
 }

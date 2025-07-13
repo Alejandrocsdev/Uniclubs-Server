@@ -1,6 +1,7 @@
-const { NODE_ENV, COOKIE_DOMAIN } = process.env
+const { NODE_ENV, COOKIE_DOMAIN, WIFI, WIFI_URL } = process.env
 
 const isProduction = NODE_ENV === 'production'
+const isWifi = WIFI === 'true'
 
 const config = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -8,7 +9,7 @@ const config = {
   path: '/',
   sameSite: isProduction ? 'none' : 'strict',
   secure: isProduction,
-  domain: isProduction ? COOKIE_DOMAIN : 'localhost'
+  domain: isProduction ? COOKIE_DOMAIN : `${isWifi ? WIFI_URL : 'localhost'}`
 }
 
 // Passing "options.maxAge" is deprecated.

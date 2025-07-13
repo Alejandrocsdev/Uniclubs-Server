@@ -6,8 +6,10 @@ function globalError(error, req, res, next) {
   if (process.env.NODE_ENV === 'development') console.error(error)
 
   try {
-    jwtError(error) // Jason web token error
-    sqlError(error) // Sequelize error
+    // Jason web token error
+    jwtError(error) 
+    // Sequelize error
+    sqlError(error) 
   } catch (customError) {
     error = customError
   }

@@ -39,6 +39,10 @@ const emailOptions = {
   otp: data => ({
     ...loadTemplate('otp', { otp: data.otp }),
     subject: 'Your Uniclubs Verification Code'
+  }),
+  username: data => ({
+    ...loadTemplate('username', { username: data.username }),
+    subject: 'Your Uniclubs Username'
   })
 }
 

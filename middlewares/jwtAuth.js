@@ -1,9 +1,9 @@
 // Models
 const { User } = require('../models')
-// Errors
-const CustomError = require('../errors/CustomError')
 // Utilities
 const { jwt } = require('../utils')
+// Errors
+const CustomError = require('../errors/CustomError')
 
 const jwtAuth = async (req, res, next) => {
   try {

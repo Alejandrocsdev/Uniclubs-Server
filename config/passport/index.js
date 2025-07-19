@@ -8,6 +8,6 @@ const localStrategy = require('./local')
 passport.use('local', localStrategy)
 
 // Authentication
-const signInAuth = passport.authenticate('local', { session: false })
+const pwdAuth = passport.authenticate('local', { session: false })
 
-module.exports = { signInAuth }
+module.exports = { pwdAuth }

@@ -50,53 +50,27 @@ class AuthController {
   })
 
   signUp = asyncError(async (req, res) => {
-    const { username, password, rePassword, email } = req.body
+    const { username, password, email } = req.body
     const { otp } = req
 
     const hashedPwd = await encrypt.hash(password)
 
-    await Promise.all([User.create({ username, password: hashedPwd, email }), otp.update({ expireTime: Date.now() })])
+    await Promise.all([
+      User.create({ username, password: hashedPwd, email }),
+      otp.update({ expireTime: Date.now() })
+    ])
 
     res.status(201).json({ message: 'User registered successfully.' })
   })
 
-  recoverPwd = asyncError(async (req, res) => {
-    const { password, rePassword, email } = req.body
-    const { otp } = req
-
-    const hashedPwd = await encrypt.hash(password)
-
-    await Promise.all([
-      User.update({ password: hashedPwd }, { where: { email } }),
-      otp.update({ expireTime: Date.now() })
-    ])
-
-    res.status(200).json({ message: 'User password reset successfully.' })
-  })
-
-  recoverUsr = asyncError(async (req, res) => {
-    const { email } = req.body
-    const { otp } = req
-
-    const user = await User.findOne({ where: { email } })
-    if (!user) throw new CustomError(404, 'No account is associated with this email address.')
-
-    await Promise.all([
-      sendMail({ email, username: user.username }, 'username'),
-      otp.update({ expireTime: Date.now() })
-    ])
-
-    res.status(200).json({ message: 'User username sent successfully.' })
-  })
-
   emailOtp = asyncError(async (req, res) => {
-    const { email } = req.body
+    const { email, purpose } = req.body
 
     const otp = String(encrypt.otp())
     const hashedOtp = await encrypt.hash(otp)
     const expireTime = Date.now() + 15 * 60 * 1000
 
-    const otpRecord = await Otp.findOne({ where: { email } })
+    const otpRecord = await Otp.findOne({ where: { email, purpose } })
 
     if (otpRecord) {
       // Case 1: Email already exists — update its OTP and expiration time
@@ -104,13 +78,13 @@ class AuthController {
     } else {
       // lt: less than
       // Case 2: Email does not exist — check for any expired record to reuse
-      const expiredRecord = await Otp.findOne({ where: { expireTime: { [Op.lt]: Date.now() } } })
+      const expiredRecord = await Otp.findOne({ where: { email, expireTime: { [Op.lt]: Date.now() }, purpose } })
       if (expiredRecord) {
         // Case 2a: Found expired record — update it with new email, OTP, and expiration time
         await expiredRecord.update({ otp: hashedOtp, email, expireTime })
       } else {
         // Case 2b: No expired record — create a new OTP entry
-        await Otp.create({ otp: hashedOtp, email, expireTime })
+        await Otp.create({ otp: hashedOtp, email, expireTime, purpose })
       }
     }
 

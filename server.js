@@ -10,10 +10,23 @@ const cors = require('./config/cors')
 const cookieParser = require('cookie-parser')
 // Routes
 const routes = require('./routes')
-// Middlewares: Default Route & Global Error
-const { defaultRoute, globalError } = require('./middlewares')
+// Middlewares: Rate Limiter & Default Route & Global Error
+const { rateLimiter, defaultRoute, globalError } = require('./middlewares')
 // Server URL
 const { serverUrl } = require('./utils')
+
+// Enable trust proxy to properly detect client IPs and protocol
+app.set('trust proxy', true)
+
+// 🔍 Logging middleware — placed **after** `trust proxy`
+app.use((req, res, next) => {
+  console.log('✅ trust proxy =', app.get('trust proxy'))
+  console.log('➡️ req.ip =', req.ip)
+  console.log('📬 X-Forwarded-For =', req.headers['x-forwarded-for'])
+  console.log('🔒 req.protocol =', req.protocol)
+  console.log('🌐 req.hostname =', req.hostname)
+  next()
+})
 
 // Enable CORS with custom configuration
 app.use(cors)
@@ -22,7 +35,7 @@ app.use(cookieParser())
 // Parse incoming JSON requests and attach the data to req.body
 app.use(express.json())
 // Mount all API routes under /api
-app.use('/api', routes)
+app.use('/api', rateLimiter, routes)
 // Handle browser's automatic favicon.ico requests with 204 (No Content)
 app.get('/favicon.ico', (req, res) => res.sendStatus(204))
 // Health check endpoint to confirm the server is running

@@ -17,13 +17,23 @@ module.exports = (sequelize, DataTypes) => {
       expireTime: {
         allowNull: false,
         type: DataTypes.BIGINT
+      },
+      purpose: {
+        allowNull: false,
+        type: DataTypes.ENUM('sign-up', 'pwd-reset', 'usr-recovery')
       }
     },
     {
       sequelize,
       modelName: 'Otp',
       tableName: 'otps',
-      underscored: true
+      underscored: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ['email', 'purpose']
+        }
+      ]
     }
   )
 

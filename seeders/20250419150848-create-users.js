@@ -6,7 +6,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const usersData = [
       {
-        username: 'Admin',
+        username: 'admin',
         password: await encrypt.hash('123456'),
         email: 'alejandrocsdev@gmail.com'
       }

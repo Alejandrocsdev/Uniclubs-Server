@@ -4,6 +4,7 @@ const {
   AggregateError,
   AssociationError,
   BulkRecordError,
+  ConnectionError,
   AccessDeniedError,
   ConnectionAcquireTimeoutError,
   ConnectionRefusedError,
@@ -11,6 +12,7 @@ const {
   HostNotFoundError,
   HostNotReachableError,
   InvalidConnectionError,
+  DatabaseError,
   ExclusionConstraintError,
   ForeignKeyConstraintError,
   TimeoutError,
@@ -21,6 +23,7 @@ const {
   OptimisticLockError,
   QueryError,
   SequelizeScopeError,
+  ValidationError,
   UniqueConstraintError
 } = require('sequelize')
 // Errors
@@ -34,6 +37,9 @@ const sqlError = error => {
     const { type, path: field, value } = error.errors?.[0]
     throw new CustomError(409, `${error.name}: ${error.message}`, { type, field, value })
   }
+  if (error instanceof ValidationError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
 
   // === Database Errors ===
   if (error instanceof ExclusionConstraintError) {
@@ -46,6 +52,35 @@ const sqlError = error => {
     throw new CustomError(500, `${error.name}: ${error.message}`)
   }
   if (error instanceof UnknownConstraintError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof DatabaseError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+
+  // === Connection Errors ===
+  if (error instanceof AccessDeniedError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof ConnectionAcquireTimeoutError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof ConnectionRefusedError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof ConnectionTimedOutError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof HostNotFoundError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof HostNotReachableError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof InvalidConnectionError) {
+    throw new CustomError(500, `${error.name}: ${error.message}`)
+  }
+  if (error instanceof ConnectionError) {
     throw new CustomError(500, `${error.name}: ${error.message}`)
   }
 
@@ -75,29 +110,6 @@ const sqlError = error => {
     throw new CustomError(500, `${error.name}: ${error.message}`)
   }
   if (error instanceof SequelizeScopeError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-
-  // === Connection Errors ===
-  if (error instanceof AccessDeniedError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-  if (error instanceof ConnectionAcquireTimeoutError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-  if (error instanceof ConnectionRefusedError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-  if (error instanceof ConnectionTimedOutError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-  if (error instanceof HostNotFoundError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-  if (error instanceof HostNotReachableError) {
-    throw new CustomError(500, `${error.name}: ${error.message}`)
-  }
-  if (error instanceof InvalidConnectionError) {
     throw new CustomError(500, `${error.name}: ${error.message}`)
   }
 }

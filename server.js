@@ -16,7 +16,7 @@ const { rateLimiter, defaultRoute, globalError } = require('./middlewares')
 const { serverUrl } = require('./utils')
 
 // Enable trust proxy to properly detect client IPs and protocol
-app.set('trust proxy', true)
+app.set('trust proxy', false)
 
 // 🔍 Logging middleware — placed **after** `trust proxy`
 app.use((req, res, next) => {

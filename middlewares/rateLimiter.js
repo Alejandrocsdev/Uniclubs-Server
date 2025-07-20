@@ -1,7 +1,7 @@
 // In-memory store: { 'ip:route': [timestamps] }
 const rateStore = new Map()
 
-const EXCLUDED_PATHS = ['/api/auth/me', '/api/auth/refresh']
+const EXCLUDED_PATHS = ['/auth/me', '/auth/refresh']
 const WINDOW_MS = 60 * 1000
 const MAX_REQUESTS = 5
 

@@ -1,5 +1,5 @@
 // Models
-const { User, Otp } = require('../models')
+const { User, Otp, Role } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -28,9 +28,6 @@ class AuthController {
     const user = await User.findOne({ where: { refreshToken } })
     if (!user || id !== user.id) throw new CustomError(403, 'Invalid refresh token or user mismatch')
 
-    // const { roles } = user
-    // if (!roles) throw new CustomError(403, '查無權限角色')
-
     const accessToken = jwt.signAccessToken(id)
 
     res.status(200).json({ message: 'Access token refreshed successfully', accessToken })
@@ -43,9 +40,6 @@ class AuthController {
     await User.update({ refreshToken }, { where: { id: user.id } })
     cookie.store(res, refreshToken)
 
-    // const { roles } = user
-    // if (!roles) throw new CustomError(403, 'No role permissions found.')
-
     res.status(200).json({ message: 'Sign in successful.' })
   })
 
@@ -55,10 +49,18 @@ class AuthController {
 
     const hashedPwd = await encrypt.hash(password)
 
-    await Promise.all([
-      User.create({ username, password: hashedPwd, email }),
-      otp.update({ expireTime: Date.now() })
-    ])
+    // Step 1: Find default role
+    const role = await Role.findOne({ where: { name: 'user' } })
+    if (!role) throw new CustomError(500, 'Default user role not found')
+
+    // Step 2: Create user
+    const user = await User.create({ username, password: hashedPwd, email })
+
+    // Step 3: Associate role to user
+    await user.addRole(role)
+
+    // Step 4: Update OTP
+    await otp.update({ expireTime: Date.now() })
 
     res.status(201).json({ message: 'User registered successfully.' })
   })

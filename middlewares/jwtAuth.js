@@ -16,7 +16,7 @@ const jwtAuth = async (req, res, next) => {
     // Error handles by jwtError
     const { id } = jwt.verifyToken(token, 'at')
 
-    const user = await User.findByPk(id)
+    const user = await User.findByPk(id, { include: { association: 'roles', attributes: ['name'] } })
     if (!user || id !== user.id) throw new CustomError(403, 'Invalid access token or user mismatch')
 
     req.user = user

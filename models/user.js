@@ -2,7 +2,14 @@
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    // static associate(models) {}
+    static associate(models) {
+      User.belongsToMany(models.Role, {
+        through: 'user_roles',
+        foreignKey: 'user_id',
+        otherKey: 'role_id',
+        as: 'roles'
+      })
+    }
   }
   User.init(
     {
@@ -34,8 +41,8 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   User.prototype.getSafeData = function () {
-    const { username, email } = this
-    return { username, email }
+    const { username, email, roles } = this
+    return { username, email, roles: roles.map(role => role.name) }
   }
 
   return User

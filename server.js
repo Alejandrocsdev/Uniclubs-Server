@@ -17,15 +17,6 @@ const { serverUrl } = require('./utils')
 
 // Enable trust proxy to properly detect client IPs and protocol
 app.set('trust proxy', true)
-// 🔍 Logging middleware — placed **after** `trust proxy`
-app.use((req, res, next) => {
-  console.log('✅ trust proxy =', app.get('trust proxy'))
-  console.log('➡️ req.ip =', req.ip)
-  console.log('📬 X-Forwarded-For =', req.headers['x-forwarded-for'])
-  console.log('🔒 req.protocol =', req.protocol)
-  console.log('🌐 req.hostname =', req.hostname)
-  next()
-})
 // Enable CORS with custom configuration
 app.use(cors)
 // Parse cookies attached to the client request

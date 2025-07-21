@@ -93,3 +93,7 @@ To run the server with CORS allowed for a specific Wi-Fi host (must set `WIFI_UR
 ```
 npm run dev:wifi
 ```
+
+## 8. Deployment to Render.com
+
+Every time you push to the `main` branch, the backend server will be automatically deployed to `Render.com` via Render’s built-in Git integration.

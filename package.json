@@ -4,8 +4,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "wifi": "cross-env WIFI=true nodemon server.js",
-    "preview": "cross-env PREVIEW=true nodemon server.js",
+    "dev:wifi": "cross-env WIFI=true nodemon server.js",
     "start": "node server.js",
     "db:reset": "bash scripts/reset-db.sh production",
     "db:reset:dev": "bash scripts/reset-db.sh development",

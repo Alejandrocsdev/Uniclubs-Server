@@ -5,7 +5,6 @@ const { clientUrl } = require('../../utils')
 
 const allowedOrigins = [clientUrl]
 
-
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {

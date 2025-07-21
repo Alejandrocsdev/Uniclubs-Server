@@ -76,14 +76,20 @@ npm run db:reset:dev
 
 ## 7. Running the Backend Server
 
-Once the above setup is complete, start the backend server with:
+Start the backend server with:
 
 ```
 npm run start
 ```
 
-or
+For development with hot reloading:
 
 ```
 npm run dev
+```
+
+To run the server with CORS allowed for a specific Wi-Fi host (must set `WIFI_URL` in .env):
+
+```
+npm run dev:wifi
 ```

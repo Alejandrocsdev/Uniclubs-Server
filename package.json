@@ -7,8 +7,10 @@
     "wifi": "cross-env WIFI=true nodemon server.js",
     "preview": "cross-env PREVIEW=true nodemon server.js",
     "start": "node server.js",
-    "db:reset:dev": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all",
-    "db:reset": "npx sequelize db:drop --env production && npx sequelize db:create --env production && npx sequelize db:migrate --env production && npx sequelize db:seed:all --env production"
+    "db:reset": "bash scripts/reset-db.sh production",
+    "db:reset:dev": "bash scripts/reset-db.sh development",
+    "gen:hash": "node scripts/genHash.js",
+    "gen:secret": "node scripts/genSecret.js"
   },
   "repository": {
     "type": "git",

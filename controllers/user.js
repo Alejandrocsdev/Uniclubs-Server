@@ -1,5 +1,5 @@
 // Models
-const { User } = require('../models')
+const { User, Role } = require('../models')
 // Middlewares
 const { asyncError } = require('../middlewares')
 // Utilities
@@ -26,14 +26,10 @@ class UserController {
   })
 
   postUser = asyncError(async (req, res) => {
-    const { username, password, rePassword, email } = req.body
+    const { username, password, email } = req.body
 
-    if (!username || !password || !rePassword || !email) {
+    if (!username || !password || !email) {
       throw new CustomError(400, 'Missing required fields.')
-    }
-
-    if (password !== rePassword) {
-      throw new CustomError(400, 'Passwords do not match.')
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -47,7 +43,15 @@ class UserController {
     }
 
     const hashedPwd = await encrypt.hash(password, 10)
+
+    const role = await Role.findOne({ where: { name: 'user' } })
+    if (!role) throw new CustomError(500, 'Default user role not found')
+
     const newUser = await User.create({ username, password: hashedPwd, email })
+
+    await newUser.addRole(role)
+
+    await newUser.reload()
 
     res.status(201).json({ message: `User ${newUser.id} created successfully.`, user: newUser.getSafeData() })
   })

@@ -36,13 +36,14 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
       tableName: 'users',
-      underscored: true
+      underscored: true,
+      defaultScope: { include: [{ association: 'roles', attributes: ['name'] }] }
     }
   )
 
   User.prototype.getSafeData = function () {
-    const { username, email, roles } = this
-    return { username, email, roles: roles.map(role => role.name) }
+    const { id, username, email, roles } = this
+    return { id, username, email, roles: roles.map(role => role.name) }
   }
 
   return User

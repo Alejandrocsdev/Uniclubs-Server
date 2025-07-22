@@ -46,11 +46,50 @@ Create a `.env` file in the root of the backend directory. Use the provided data
 
 ## 4. Set Up MySQL Database
 
+### 🔹 Local MySQL Setup
+
 Install MySQL on your local machine if not already installed.
 
-Create a MySQL user and assign the username and password you specified in `MYSQL_DEV_USERNAME` and `MYSQL_DEV_PASSWORD`.
+1. Visit [https://dev.mysql.com/downloads/workbench](https://dev.mysql.com/downloads/workbench)
+2. Click **"No thanks, just start my download."** to start downloading the package.
+3. During installation, keep all options as default.
+4. After installing MySQL Workbench, open it.
+5. Select **"Local instance MySQL80"** from the home screen.
+6. Set your **root password** and enable **"Save password in vault"**.
+7. This completes your local MySQL database setup.
 
-## 5. Generate Secrets and Hashes
+Make sure the password you set is used as the value for `MYSQL_DEV_PASSWORD` in your `.env` file.
+
+### 🔹 Production AWS RDS Setup
+
+If you're connecting to the production AWS RDS database:
+
+1. Visit [https://whatismyipaddress.com](https://whatismyipaddress.com) to get your current IPv4 address.
+2. Provide this IP to the **database owner** to authorize access.
+3. Once authorized, open **MySQL Workbench**.
+4. Click the **"+"** icon next to **"MySQL Connections"**.
+5. Fill in:
+   - **Connection Name**: Uniclubs-database
+   - **Hostname**: use the `MYSQL_PRO_HOST` value
+   - **Username**: use the `MYSQL_PRO_USERNAME` value
+   - **Password**: click **"Store in Vault..."** and enter the `MYSQL_PRO_PASSWORD` value
+6. Click **OK** to save and connect.
+
+## 5. Database Migration and Seeding Commands
+
+To reset the **production database** (drop, create, migrate, seed), run:
+
+```
+npm run db:reset
+```
+
+To reset the **local development database**, run:
+
+```
+npm run db:reset:dev
+```
+
+## 6. Generate Secrets and Hashes
 
 To generate a secure **Access Token Secret (AT_SECRET)** and **Refresh Token Secret (RT_SECRET)**, run:
 
@@ -64,20 +103,6 @@ During development, if you need to create a hashed password (e.g., for testing o
 
 ```
 npm run gen:hash
-```
-
-## 6. Database Migration and Seeding Commands
-
-To reset the **production database** (drop, create, migrate, seed), run:
-
-```
-npm run db:reset
-```
-
-To reset the **local development database**, run:
-
-```
-npm run db:reset:dev
 ```
 
 ## 7. Running the Backend Server

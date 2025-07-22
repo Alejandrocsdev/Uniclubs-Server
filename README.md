@@ -1,10 +1,12 @@
 # Gamech
 
-## 🛠️ Backend Server Setup Guid
+## 🛠️ Backend Server Setup Guide
 
-This guide provides clear steps for frontend teammates to **start and run the backend server**.
+This guide provides clear steps for teammates to **start and run the backend server**.
 
 ## 1. Clone or Pull the Repository
+
+If you haven't cloned the repository yet, do:
 
 ```
 git clone https://github.com/Alejandrocsdev/Uniclubs-Server.git
@@ -25,6 +27,10 @@ npm install
 
 ## 3. Create `.env` File
 Create a `.env` file in the root of the backend directory. Use the provided data for the contents. You need to configure the following variables:
+
+`PORT` — Your server port for development
+
+`CLIENT_PORT` — The frontend Vite server port for development
 
 `MYSQL_DEV_USERNAME` — Your MySQL database username for development
 
@@ -94,6 +100,6 @@ To run the server with CORS allowed for a specific Wi-Fi host (must set `WIFI_UR
 npm run dev:wifi
 ```
 
-## 8. Deployment to Render.com
+## 8. Deployment to Render
 
-Every time you push to the `main` branch, the backend server will be automatically deployed to `Render.com` via Render’s built-in Git integration.
+Every time you push to the `main` branch, the backend server will be automatically deployed to `Render` via Render’s built-in Git integration.

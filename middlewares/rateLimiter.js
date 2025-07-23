@@ -1,5 +1,7 @@
 // In-memory store: { 'ip:route': [timestamps] }
 const rateStore = new Map()
+// Errors
+const CustomError = require('../errors/CustomError')
 
 const EXCLUDED_PATHS = ['/auth/me', '/auth/refresh']
 const WINDOW_MS = 60 * 1000
@@ -16,7 +18,7 @@ function rateLimiter(req, res, next) {
   const timestamps = rateStore.get(key)?.filter(ts => ts > windowStart) || []
 
   if (timestamps.length >= MAX_REQUESTS) {
-    return res.status(429).json({ message: 'Too many requests' })
+    throw new CustomError(429, 'Too many requests' )
   }
 
   // Store timestamp

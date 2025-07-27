@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       purpose: {
         allowNull: false,
-        type: DataTypes.ENUM('sign-up', 'pwd-reset', 'usr-recovery')
+        type: DataTypes.ENUM('sign-up', 'reset-password', 'recover-username')
       }
     },
     {
@@ -28,12 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Otp',
       tableName: 'otps',
       underscored: true,
-      indexes: [
-        {
-          unique: true,
-          fields: ['email', 'purpose']
-        }
-      ]
+      indexes: [{ unique: true, fields: ['email', 'purpose'] }]
     }
   )
 

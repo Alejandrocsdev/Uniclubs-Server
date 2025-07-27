@@ -25,7 +25,7 @@ module.exports = {
         },
         purpose: {
           allowNull: false,
-          type: Sequelize.ENUM('sign-up', 'pwd-reset', 'usr-recovery')
+          type: Sequelize.ENUM('sign-up', 'reset-password', 'recover-username')
         },
         created_at: {
           allowNull: false,
@@ -38,13 +38,7 @@ module.exports = {
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
         }
       },
-      {
-        uniqueKeys: {
-          email_purpose_unique: {
-            fields: ['email', 'purpose']
-          }
-        }
-      }
+      { uniqueKeys: { email_purpose_unique: { fields: ['email', 'purpose'] } } }
     )
   },
   async down(queryInterface, Sequelize) {

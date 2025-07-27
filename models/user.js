@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'role_id',
         as: 'roles'
       })
+      User.belongsToMany(models.Club, {
+        through: 'user_clubs',
+        foreignKey: 'user_id',
+        otherKey: 'club_id',
+        as: 'clubs'
+      })
     }
   }
   User.init(
@@ -37,13 +43,31 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'User',
       tableName: 'users',
       underscored: true,
-      defaultScope: { include: [{ association: 'roles', attributes: ['name'] }] }
+      defaultScope: {
+        include: [
+          { association: 'roles', attributes: ['name'] },
+          {
+            association: 'clubs',
+            attributes: ['id', 'openTime', 'closeTime', 'slotDuration'],
+            through: { attributes: [] }
+          }
+        ]
+      }
     }
   )
 
-  User.prototype.getSafeData = function () {
-    const { id, username, email, roles } = this
-    return { id, username, email, roles: roles.map(role => role.name) }
+  User.prototype.getSafeData = function (options) {
+    // Omit password, refreshToken
+    const { id, username, email, roles = [], clubs = [], createdAt, updatedAt } = this
+
+    const safeData = { id, username, email, roles: roles.map(role => role.name), clubs }
+
+    if (options?.ts) {
+      safeData.createdAt = createdAt
+      safeData.updatedAt = updatedAt
+    }
+
+    return safeData
   }
 
   return User

@@ -11,9 +11,12 @@ const { pwdAuth } = require('../config/passport')
 router.get('/me', jwtAuth, authController.getAuthUser)
 router.post('/refresh', authController.refresh)
 router.post('/sign-in', pwdAuth, authController.signIn)
+router.post('/sign-out', jwtAuth, authController.signOut)
 
 // Without Credentials
 router.post('/sign-up', otpAuth('sign-up'), authController.signUp)
-router.post('/email/otp', authController.emailOtp)
+router.post('/reset-password', otpAuth('reset-password'), authController.resetPassword)
+router.post('/recover-username', otpAuth('recover-username'), authController.recoverUsername)
+router.post('/email-otp', authController.emailOtp)
 
 module.exports = router

@@ -1,6 +1,5 @@
-// const userController = require('./user')
+const userController = require('./user')
 const authController = require('./auth')
-const recoveryController = require('./recovery')
+const clubController = require('./club')
 
-// module.exports = { userController, authController, recoveryController }
-module.exports = { authController, recoveryController }
+module.exports = { userController, authController, clubController }

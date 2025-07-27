@@ -1,12 +1,12 @@
 const { Router } = require('express')
 const router = Router()
 
-// const user = require('./user')
+const user = require('./user')
 const auth = require('./auth')
-const recovery = require('./recovery')
+const club = require('./club')
 
-// router.use('/user', user)
+router.use('/user', user)
 router.use('/auth', auth)
-router.use('/recovery', recovery)
+router.use('/club', club)
 
 module.exports = router

@@ -1,11 +1,11 @@
 const { Router } = require('express')
 const router = Router()
 
-const { userController } = require('../controllers')
+const { clubController } = require('../controllers')
 
 // Middlewares
 const { jwtAuth } = require('../middlewares')
 
-router.patch('/password', jwtAuth, userController.updatePassword)
+router.get('/', jwtAuth, clubController.getAllClubs)
 
 module.exports = router

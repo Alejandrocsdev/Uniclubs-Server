@@ -2,28 +2,29 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user_roles', {
+    await queryInterface.createTable('clubs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      name: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        // Matches the 'users' table in the User model
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        type: Sequelize.STRING,
+        unique: true
       },
-      role_id: {
+      open_time: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        // Matches the 'roles' table in the Role model
-        references: { model: 'roles', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        type: Sequelize.TIME
+      },
+      close_time: {
+        allowNull: false,
+        type: Sequelize.TIME
+      },
+      slot_duration: {
+        allowNull: true,
+        type: Sequelize.INTEGER
       },
       created_at: {
         allowNull: false,
@@ -37,8 +38,7 @@ module.exports = {
       }
     })
   },
-
   async down(queryInterface) {
-    await queryInterface.dropTable('user_roles')
+    await queryInterface.dropTable('clubs')
   }
 }

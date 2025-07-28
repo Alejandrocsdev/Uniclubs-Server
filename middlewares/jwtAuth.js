@@ -5,7 +5,7 @@ const { jwt } = require('../utils')
 // Errors
 const CustomError = require('../errors/CustomError')
 
-const jwtAuth = async (req, res, next) => {
+const jwtAuth = role => async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization
     if (!authHeader) throw new CustomError(401, 'Missing authorization header')
@@ -18,6 +18,9 @@ const jwtAuth = async (req, res, next) => {
 
     const user = await User.findByPk(id)
     if (!user || id !== user.id) throw new CustomError(403, 'Invalid access token or user mismatch')
+
+    const roles = user.roles.map(role => role.name)
+    if (role && !roles.includes(role)) throw new CustomError(403, `Access denied: requires role [${role}]`)
 
     req.user = user
     next()

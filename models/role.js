@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.ENUM('guest', 'user', 'admin', 'owner')
       }
     },
     {

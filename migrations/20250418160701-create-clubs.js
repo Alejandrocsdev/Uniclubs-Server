@@ -9,22 +9,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user_id: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING,
         unique: true
-      },
-      open_time: {
-        allowNull: false,
-        type: Sequelize.TIME
-      },
-      close_time: {
-        allowNull: false,
-        type: Sequelize.TIME
-      },
-      slot_duration: {
-        allowNull: true,
-        type: Sequelize.INTEGER
       },
       created_at: {
         allowNull: false,

@@ -7,13 +7,15 @@ module.exports = (sequelize, DataTypes) => {
         through: 'user_roles',
         foreignKey: 'user_id',
         otherKey: 'role_id',
-        as: 'roles'
+        as: 'roles',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
-      User.belongsToMany(models.Club, {
-        through: 'user_clubs',
+      User.hasOne(models.Club, {
         foreignKey: 'user_id',
-        otherKey: 'club_id',
-        as: 'clubs'
+        as: 'club',
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       })
     }
   }
@@ -46,11 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultScope: {
         include: [
           { association: 'roles', attributes: ['name'] },
-          {
-            association: 'clubs',
-            attributes: ['id', 'openTime', 'closeTime', 'slotDuration'],
-            through: { attributes: [] }
-          }
+          { association: 'club', attributes: ['id', 'name'] }
         ]
       }
     }
@@ -58,9 +56,9 @@ module.exports = (sequelize, DataTypes) => {
 
   User.prototype.getSafeData = function (options) {
     // Omit password, refreshToken
-    const { id, username, email, roles = [], clubs = [], createdAt, updatedAt } = this
+    const { id, username, email, roles = [], club, createdAt, updatedAt } = this
 
-    const safeData = { id, username, email, roles: roles.map(role => role.name), clubs }
+    const safeData = { id, username, email, roles: roles.map(role => role.name), club }
 
     if (options?.ts) {
       safeData.createdAt = createdAt

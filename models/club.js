@@ -3,11 +3,11 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Club extends Model {
     static associate(models) {
-      Club.belongsToMany(models.User, {
-        through: 'user_clubs',
-        foreignKey: 'club_id',
-        otherKey: 'user_id',
-        as: 'admins'
+      Club.belongsTo(models.User, {
+        foreignKey: 'user_id',
+        as: 'admin',
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       })
     }
   }
@@ -17,18 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
         unique: true
-      },
-      openTime: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
-      closeTime: {
-        allowNull: false,
-        type: DataTypes.TIME
-      },
-      slotDuration: {
-        allowNull: false,
-        type: DataTypes.TIME
       }
     },
     {
@@ -40,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   Club.prototype.getSafeData = function (options) {
-    const { id, name, openTime, closeTime, createdAt, updatedAt } = this
+    const { id, name, createdAt, updatedAt } = this
 
-    const safeData = { id, name, openTime, closeTime }
+    const safeData = { id, name }
 
     if (options?.ts) {
       safeData.createdAt = createdAt

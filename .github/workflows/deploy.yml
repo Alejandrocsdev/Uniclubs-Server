@@ -7,17 +7,23 @@ on:
 
 jobs:
   deploy:
+    name: Deploy Backend via SSH
     runs-on: ubuntu-latest
 
     steps:
-      - name: Update backend and restart PM2 process
+      - name: SSH into server and deploy backend
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
             cd /home/alex/Documents/Gamech/Uniclubs-Server
+            git clean -fd
             git pull origin main
             npm install
-            pm2 restart uniclubs-server
+            pm2 start index.js --name uniclubs-server || pm2 restart uniclubs-server

@@ -23,7 +23,6 @@ jobs:
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
             cd /home/alex/Documents/Gamech/Uniclubs-Server
-            git clean -fd
             git pull origin main
             npm install
-            pm2 start index.js --name uniclubs-server || pm2 restart uniclubs-server
+            pm2 restart uniclubs-server

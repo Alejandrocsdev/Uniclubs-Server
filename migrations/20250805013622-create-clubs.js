@@ -2,35 +2,17 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('clubs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      name: {
         allowNull: false,
         type: Sequelize.STRING,
         unique: true
-      },
-      password: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
-      },
-      refresh_token: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
-      level: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        defaultValue: 'beginner'
       },
       created_at: {
         allowNull: false,
@@ -45,6 +27,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable('clubs')
   }
 }

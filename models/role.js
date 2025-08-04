@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
         through: 'user_roles',
         foreignKey: 'role_id',
         otherKey: 'user_id',
-        as: 'users'
+        as: 'users',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
     }
   }
@@ -15,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         allowNull: false,
-        type: DataTypes.ENUM('guest', 'user', 'admin', 'owner')
+        type: DataTypes.STRING,
+        unique: true
       }
     },
     {

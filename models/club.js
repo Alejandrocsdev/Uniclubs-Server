@@ -3,11 +3,13 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Club extends Model {
     static associate(models) {
-      Club.belongsTo(models.User, {
-        foreignKey: 'user_id',
-        as: 'admin',
+      Club.belongsToMany(models.User, {
+        through: 'user_clubs',
+        foreignKey: 'club_id',
+        otherKey: 'user_id',
+        as: 'admins',
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
       })
     }
   }
@@ -27,17 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
-  Club.prototype.getSafeData = function (options) {
-    const { id, name, createdAt, updatedAt } = this
-
-    const safeData = { id, name }
-
-    if (options?.ts) {
-      safeData.createdAt = createdAt
-      safeData.updatedAt = updatedAt
-    }
-
-    return safeData
+  Club.prototype.getSafeData = function () {
+    const { id, name } = this
+    return { id, name }
   }
 
   return Club

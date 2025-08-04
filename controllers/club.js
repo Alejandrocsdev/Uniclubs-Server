@@ -6,9 +6,8 @@ const { asyncError } = require('../middlewares')
 class ClubController {
   getAllClubs = asyncError(async (req, res) => {
     const clubs = await Club.findAll()
-    const { ts } = req.query
 
-    const safeClubs = clubs.map(club => club.getSafeData({ ts }))
+    const safeClubs = clubs.map(club => club.getSafeData())
 
     res.status(200).json({ message: 'All clubs retrieved successfully.', clubs: safeClubs })
   })

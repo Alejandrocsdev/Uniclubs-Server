@@ -25,7 +25,7 @@ module.exports = {
         },
         purpose: {
           allowNull: false,
-          type: Sequelize.ENUM('sign-up', 'reset-password', 'recover-username')
+          type: Sequelize.STRING
         },
         created_at: {
           allowNull: false,

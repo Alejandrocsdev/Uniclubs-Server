@@ -14,9 +14,8 @@ const { jwt, cookie, encrypt } = require('../utils')
 class AuthController {
   getAuthUser = asyncError(async (req, res) => {
     const { user } = req
-    const { ts } = req.query
     
-    res.status(200).json({ message: 'Authenticated user retrieved successfully', user: user.getSafeData({ ts }) })
+    res.status(200).json({ message: 'Authenticated user retrieved successfully', user: user.getSafeData() })
   })
 
   refresh = asyncError(async (req, res) => {

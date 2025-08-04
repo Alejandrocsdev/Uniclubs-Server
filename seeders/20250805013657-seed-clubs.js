@@ -1,6 +1,6 @@
 'use strict'
 
-const clubsData = [{ user_id: 3, name: 'A' }, { user_id: 4, name: 'B' }]
+const clubsData = [{ name: 'A' }, { name: 'B' }, { name: 'C' }]
 
 module.exports = {
   async up(queryInterface) {

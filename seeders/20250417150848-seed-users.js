@@ -8,22 +8,26 @@ module.exports = {
       {
         username: 'guest',
         password: await encrypt.hash('123456'),
-        email: 'guest@gmail.com'
+        email: 'guest@gmail.com',
+        level: 'beginner'
       },
       {
         username: 'user',
         password: await encrypt.hash('123456'),
-        email: 'user@gmail.com'
+        email: 'user@gmail.com',
+        level: 'beginner'
       },
       {
         username: 'admin',
         password: await encrypt.hash('123456'),
-        email: 'admin@gmail.com'
+        email: 'admin@gmail.com',
+        level: 'intermediate'
       },
       {
         username: 'owner',
         password: await encrypt.hash('123456'),
-        email: 'alejandrocsdev@gmail.com'
+        email: 'alejandrocsdev@gmail.com',
+        level: 'advanced'
       }
     ]
 

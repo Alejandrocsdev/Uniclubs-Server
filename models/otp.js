@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       purpose: {
         allowNull: false,
-        type: DataTypes.ENUM('sign-up', 'reset-password', 'recover-username')
+        type: DataTypes.STRING,
+        validate: { isIn: [['sign-up', 'reset-password', 'recover-username']] }
       }
     },
     {

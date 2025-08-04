@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('clubs', {
+    await queryInterface.createTable('user_clubs', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,16 +10,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.INTEGER,
+        // Matches the 'users' table in the User model
         references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
       },
-      name: {
+      club_id: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.INTEGER,
+        // Matches the 'clubs' table in the Role model
+        references: { model: 'clubs', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       created_at: {
         allowNull: false,
@@ -33,7 +37,8 @@ module.exports = {
       }
     })
   },
+
   async down(queryInterface) {
-    await queryInterface.dropTable('clubs')
+    await queryInterface.dropTable('user_clubs')
   }
 }

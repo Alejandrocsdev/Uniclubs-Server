@@ -1,15 +1,15 @@
 Hi there 👋
 
-As requested, here is your Uniclubs username: {{username}}
+As requested, here is your Gamech username: {{username}}
 
-If you did not request this information, please contact the Uniclubs support team immediately.
+If you did not request this information, please contact the Gamech support team immediately.
 
 Thank you,  
-Uniclubs Team
+Gamech Team
 
 ----------------------------
 
 Note: This is an automated email, please do not reply directly to it.  
 If you need further assistance, feel free to reach out to our support team via the Help Center.
 
-© 2025 Uniclubs. All rights reserved.
+© 2025 Gamech. All rights reserved.

@@ -1,5 +1,5 @@
 // Models
-const { Club } = require('../models')
+const { Club, User } = require('../models')
 // Middlewares
 const { asyncError } = require('../middlewares')
 

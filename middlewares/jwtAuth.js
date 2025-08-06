@@ -14,10 +14,10 @@ const jwtAuth = role => async (req, res, next) => {
     if (!token) throw new CustomError(401, 'Missing access token')
 
     // Error handles by jwtError
-    const { id } = jwt.verifyToken(token, 'at')
+    const { userId } = jwt.verifyToken(token, 'at')
 
-    const user = await User.findByPk(id)
-    if (!user || id !== user.id) throw new CustomError(403, 'Invalid access token or user mismatch')
+    const user = await User.findByPk(userId)
+    if (!user || userId !== user.id) throw new CustomError(403, 'Invalid access token or user mismatch')
 
     const roles = user.roles.map(role => role.name)
     if (role && !roles.includes(role)) throw new CustomError(403, `Access denied: requires role [${role}]`)

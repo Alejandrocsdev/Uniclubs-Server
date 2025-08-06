@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       purpose: {
         allowNull: false,
         type: DataTypes.STRING,
-        validate: { isIn: [['sign-up', 'reset-password', 'recover-username']] }
+        validate: { isIn: [['sign-up:user', 'sign-up:admin', 'reset-password', 'recover-username']] }
       }
     },
     {

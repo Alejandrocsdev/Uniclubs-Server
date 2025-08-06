@@ -1,5 +1,5 @@
 // Models
-const { User, Otp, Role } = require('../models')
+const { User, Otp, Role, Club } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -9,12 +9,12 @@ const sendMail = require('../config/email')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { jwt, cookie, encrypt } = require('../utils')
+const { jwt, cookie, encrypt, clientUrl } = require('../utils')
 
 class AuthController {
   getAuthUser = asyncError(async (req, res) => {
     const { user } = req
-    
+
     res.status(200).json({ message: 'Authenticated user retrieved successfully', user: user.getSafeData() })
   })
 
@@ -24,12 +24,12 @@ class AuthController {
     const refreshToken = cookies.jwt
 
     // Error handles by jwtError
-    const { id } = jwt.verifyToken(refreshToken, 'rt')
+    const { userId } = jwt.verifyToken(refreshToken, 'rt')
 
     const user = await User.findOne({ where: { refreshToken } })
-    if (!user || id !== user.id) throw new CustomError(403, 'Invalid refresh token or user mismatch')
+    if (!user || userId !== user.id) throw new CustomError(403, 'Invalid refresh token or user mismatch')
 
-    const accessToken = jwt.signAccessToken(id)
+    const accessToken = jwt.signAccessToken(userId)
 
     res.status(200).json({ message: 'Access token refreshed successfully', accessToken })
   })
@@ -44,17 +44,16 @@ class AuthController {
     res.status(200).json({ message: 'Sign in successful.' })
   })
 
-  signUp = asyncError(async (req, res) => {
+  signUpUser = asyncError(async (req, res) => {
     const { username, password, email } = req.body
     const { otp } = req
 
-    const hashedPwd = await encrypt.hash(password)
-
     // Step 1: Find default role
     const role = await Role.findOne({ where: { name: 'user' } })
-    if (!role) throw new CustomError(500, 'Default user role not found')
+    if (!role) throw new CustomError(500, 'User role not found')
 
     // Step 2: Create user
+    const hashedPwd = await encrypt.hash(password)
     const user = await User.create({ username, password: hashedPwd, email })
 
     // Step 3: Associate role to user
@@ -64,6 +63,36 @@ class AuthController {
     await otp.update({ expireTime: Date.now() })
 
     res.status(201).json({ message: 'User registered successfully.' })
+  })
+
+  signUpAdmin = asyncError(async (req, res) => {
+    const { username, password, email, token } = req.body
+    const { otp } = req
+
+    const { clubName } = jwt.verifyToken(token, 'al')
+
+    // Step 1: Find both 'user' and 'admin' roles
+    const roles = await Role.findAll({ where: { name: ['user', 'admin'] } })
+    if (roles.length !== 2) throw new CustomError(500, 'Required roles (user/admin) not found')
+
+      // Step 2: Find the assigned club by name
+    const club = await Club.findOne({ where: { name: clubName } })
+    if (!club) throw new CustomError(404, 'Club not found.')
+
+    // Step 3: Create the new admin user with hashed password
+    const hashedPwd = await encrypt.hash(password)
+    const user = await User.create({ username, password: hashedPwd, email })
+
+    // Step 4: Assign both 'user' and 'admin' roles to the user
+    await user.addRoles(roles)
+
+    // Step 5: Link the user to the assigned club
+    await user.addClub(club)
+
+    // Step 6: Mark OTP as used by updating its expiration
+    await otp.update({ expireTime: Date.now() })
+
+    res.status(201).json({ message: 'Admin registered successfully.' })
   })
 
   signOut = asyncError(async (req, res) => {
@@ -136,6 +165,26 @@ class AuthController {
     ])
 
     res.status(200).json({ message: 'User username sent successfully.' })
+  })
+
+  adminLink = asyncError(async (req, res) => {
+    const { email, clubName } = req.body
+
+    // Step 1: Validate that the club exists
+    const club = await Club.findOne({ where: { name: clubName } })
+    if (!club) throw new CustomError(404, 'Club not found.')
+
+    // Step 2: Generate the token
+    const token = jwt.signAdminLink(clubName)
+    console.log('token:', token)
+
+    // Step 3: Create the full link to send
+    const link = `${clientUrl}/sign-up?token=${token}`
+
+    // Step 4: Send the email with the link
+    await sendMail({ email, link, clubName }, 'adminLink')
+
+    res.status(200).json({ message: 'Admin sign-up link sent successfully.' })
   })
 }
 

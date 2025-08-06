@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   Club.prototype.getSafeData = function () {
+    // Omit date
     const { id, name } = this
     return { id, name }
   }

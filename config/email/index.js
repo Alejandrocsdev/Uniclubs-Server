@@ -38,11 +38,15 @@ const loadTemplate = (templateName, replacements) => {
 const emailOptions = {
   otp: data => ({
     ...loadTemplate('otp', { otp: data.otp }),
-    subject: 'Your Uniclubs Verification Code'
+    subject: 'Your Gamech Verification Code'
   }),
   username: data => ({
     ...loadTemplate('username', { username: data.username }),
-    subject: 'Your Uniclubs Username'
+    subject: 'Your Gamech Username'
+  }),
+  adminLink: data => ({
+    ...loadTemplate('adminLink', { club: data.club, link: data.link }),
+    subject: 'Admin Sign-Up Invitation'
   })
 }
 
@@ -58,7 +62,7 @@ async function sendMail(data, type) {
 
   try {
     const mailOptions = emailOptions[type](data)
-    await transporter.sendMail({ from: `"Uniclubs" <${user}>`, to: data.email, ...mailOptions })
+    await transporter.sendMail({ from: `"Gamech" <${user}>`, to: data.email, ...mailOptions })
   } catch (error) {
     throw new CustomError(500, 'Failed to send email.')
   }

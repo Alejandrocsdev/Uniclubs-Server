@@ -4,26 +4,35 @@ const jwt = require('jsonwebtoken')
 const CustomError = require('../errors/CustomError')
 
 class Jwt {
-  signAccessToken(id) {
+  signAccessToken(userId) {
     try {
-      return jwt.sign({ id: Number(id) }, process.env.AT_SECRET, { expiresIn: '15m' })
+      return jwt.sign({ userId: Number(userId) }, process.env.AT_SECRET, { expiresIn: '15m' })
     } catch (error) {
       throw new CustomError(500, 'Access token generation failed')
     }
   }
 
-  signRefreshToken(id) {
+  signRefreshToken(userId) {
     try {
-      return jwt.sign({ id: Number(id) }, process.env.RT_SECRET, { expiresIn: '7d' })
+      return jwt.sign({ userId: Number(userId) }, process.env.RT_SECRET, { expiresIn: '7d' })
     } catch (error) {
       throw new CustomError(500, 'Refresh token generation failed')
+    }
+  }
+
+  signAdminLink(clubName) {
+    try {
+      return jwt.sign({ clubName }, process.env.AL_SECRET, { expiresIn: '24h' })
+    } catch (error) {
+      throw new CustomError(500, 'Admin link token generation failed')
     }
   }
 
   verifyToken(token, type) {
     const secretMap = {
       at: process.env.AT_SECRET,
-      rt: process.env.RT_SECRET
+      rt: process.env.RT_SECRET,
+      al: process.env.AL_SECRET
     }
 
     const secret = secretMap[type]

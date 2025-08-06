@@ -1,0 +1,20 @@
+Welcome to Gamech 👋
+
+You've been invited to join Gamech as an admin to manage the club: {{club}}.
+
+To complete your registration, click the link below:
+{{link}}
+
+This link is valid for 24 hours.
+
+If you weren’t expecting this invitation, you can safely ignore this email.
+
+Thank you,  
+Gamech Team
+
+----------------------------
+
+Note: This is an automated email, please do not reply directly to it.  
+If you need further assistance, feel free to reach out to our support team via the Help Center.
+
+© 2025 Gamech. All rights reserved.

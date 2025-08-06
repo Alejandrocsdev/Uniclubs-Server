@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
+      Club.hasOne(models.Schedule, {
+        foreignKey: 'club_id',
+        as: 'schedule',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      })
     }
   }
   Club.init(
@@ -25,14 +31,17 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Club',
       tableName: 'clubs',
-      underscored: true
+      underscored: true,
+      defaultScope: {
+        include: [{ association: 'schedule', attributes: ['openTime', 'closeTime', 'slotDuration', 'slotBreak'] }]
+      }
     }
   )
 
   Club.prototype.getSafeData = function () {
     // Omit date
-    const { id, name } = this
-    return { id, name }
+    const { id, name, schedule } = this
+    return { id, name, schedule }
   }
 
   return Club

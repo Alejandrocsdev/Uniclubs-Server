@@ -20,14 +20,14 @@ class AuthController {
 
   refresh = asyncError(async (req, res) => {
     const cookies = req.cookies
-    if (!cookies?.jwt) throw new CustomError(401, 'Missing refresh token')
+    if (!cookies?.jwt) throw new CustomError(401, 'Missing refresh token.')
     const refreshToken = cookies.jwt
 
     // Error handles by jwtError
     const { userId } = jwt.verifyToken(refreshToken, 'rt')
 
     const user = await User.findOne({ where: { refreshToken } })
-    if (!user || userId !== user.id) throw new CustomError(403, 'Invalid refresh token or user mismatch')
+    if (!user || userId !== user.id) throw new CustomError(403, 'Invalid refresh token or user mismatch.')
 
     const accessToken = jwt.signAccessToken(userId)
 
@@ -50,7 +50,7 @@ class AuthController {
 
     // Step 1: Find default role
     const role = await Role.findOne({ where: { name: 'user' } })
-    if (!role) throw new CustomError(500, 'User role not found')
+    if (!role) throw new CustomError(500, 'User role not found.')
 
     // Step 2: Create user
     const hashedPwd = await encrypt.hash(password)
@@ -73,7 +73,7 @@ class AuthController {
 
     // Step 1: Find both 'user' and 'admin' roles
     const roles = await Role.findAll({ where: { name: ['user', 'admin'] } })
-    if (roles.length !== 2) throw new CustomError(500, 'Required roles (user/admin) not found')
+    if (roles.length !== 2) throw new CustomError(500, 'Required roles (user/admin) not found.')
 
       // Step 2: Find the assigned club by name
     const club = await Club.findOne({ where: { name: clubName } })

@@ -9,6 +9,7 @@
     "db:reset": "bash scripts/reset-db.sh production",
     "db:reset:dev": "bash scripts/reset-db.sh development",
     "gen:hash": "node scripts/genHash.js",
+    "gen:zone": "node scripts/genZone.js",
     "gen:secret": "node scripts/genSecret.js"
   },
   "repository": {

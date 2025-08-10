@@ -23,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER
       },
+      startDate: {
+        allowNull: false,
+        type: DataTypes.DATEONLY
+      },
+      endDate: {
+        allowNull: true,
+        type: DataTypes.DATEONLY
+      },
       openTime: {
         allowNull: false,
         type: DataTypes.TIME,
@@ -40,8 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       slotBreak: {
         allowNull: true,
-        type: DataTypes.INTEGER,
-        defaultValue: 5
+        type: DataTypes.INTEGER
       }
     },
     {
@@ -54,12 +61,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   )
-
-  // Schedule.prototype.getSafeData = function () {
-  //   // Omit date
-  //   const { id, openTime, closeTime, slotDuration, slotBreak, venues } = this
-  //   return { id, openTime, closeTime, slotDuration, slotBreak, venues }
-  // }
 
   return Schedule
 }

@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
+      User.hasMany(models.Booking, {
+        foreignKey: 'user_id',
+        as: 'bookings',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      })
     }
   }
   User.init(
@@ -56,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultScope: {
         include: [
           { association: 'roles', attributes: ['name'] },
-          { association: 'clubs', attributes: ['id', 'name'], through: { attributes: [] } }
+          { association: 'clubs', attributes: ['id', 'name', 'timeZone'], through: { attributes: [] } }
         ]
       }
     }

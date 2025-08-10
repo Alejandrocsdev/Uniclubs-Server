@@ -9,6 +9,20 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
+      Venue.hasMany(models.Booking, {
+        foreignKey: 'venue_id',
+        as: 'bookings',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      })
+    }
+
+    static default(count, scheduleId, maxPlayers) {
+      return Array.from({ length: count }, (_, i) => ({
+        scheduleId,
+        name: `Venue ${i + 1}`,
+        maxPlayers
+      }))
     }
   }
   Venue.init(
@@ -33,12 +47,6 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true
     }
   )
-
-  // Venue.prototype.getSafeData = function () {
-  //   // Omit date
-  //   const { id, name, maxPlayers } = this
-  //   return { id, name, maxPlayers }
-  // }
 
   return Venue
 }

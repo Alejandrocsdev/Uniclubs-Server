@@ -1,6 +1,10 @@
 'use strict'
 
-const clubsData = [{ name: 'A' }, { name: 'B' }, { name: 'C' }]
+const clubsData = [
+  { name: 'A', time_zone: 'Europe/Amsterdam' },
+  { name: 'B', time_zone: 'Europe/Amsterdam' },
+  { name: 'C', time_zone: 'Europe/Amsterdam' }
+]
 
 module.exports = {
   async up(queryInterface) {

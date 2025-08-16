@@ -3,13 +3,14 @@ const { jwtError, sqlError } = require('../errors')
 
 function globalError(error, req, res, next) {
   // Complete error stack trace for debugging
-  if (process.env.NODE_ENV === 'development') console.error(error)
+  const { NODE_ENV, DEBUG } = process.env
+  if (NODE_ENV === 'development' || DEBUG === 'true') console.error(error)
 
   try {
     // Jason web token error
-    jwtError(error) 
+    jwtError(error)
     // Sequelize error
-    sqlError(error) 
+    sqlError(error)
   } catch (customError) {
     error = customError
   }

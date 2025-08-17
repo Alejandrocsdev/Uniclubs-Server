@@ -2,49 +2,41 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('bookings', {
+    await queryInterface.createTable('membership_plans', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      club_admin_id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        type: Sequelize.INTEGER
       },
-      club_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: { model: 'clubs', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
-      venue_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: { model: 'venues', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
-      date: {
-        allowNull: false,
-        type: Sequelize.DATEONLY
-      },
-      start_time: {
-        allowNull: false,
-        type: Sequelize.TIME
-      },
-      end_time: {
-        allowNull: false,
-        type: Sequelize.TIME
-      },
-      status: {
+      code: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      name: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      duration_days: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+      },
+      price_cents: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      currency: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      active: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
       },
       created_at: {
         allowNull: false,
@@ -59,6 +51,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('bookings')
+    await queryInterface.dropTable('membership_plans')
   }
 }

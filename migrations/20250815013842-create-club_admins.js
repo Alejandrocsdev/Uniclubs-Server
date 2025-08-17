@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user_clubs', {
+    await queryInterface.createTable('club_admins', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,7 +20,7 @@ module.exports = {
       club_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // Matches the 'clubs' table in the Role model
+        // Matches the 'clubs' table in the Club model
         references: { model: 'clubs', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -39,6 +39,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('user_clubs')
+    await queryInterface.dropTable('club_admins')
   }
 }

@@ -2,35 +2,28 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('schedule_days', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      schedule_rule_id: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.INTEGER
       },
-      password: {
+      day: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
       },
-      email: {
+      open_time: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.TIME
       },
-      level: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        defaultValue: 'beginner'
-      },
-      refresh_token: {
+      close_time: {
         allowNull: true,
-        type: Sequelize.STRING
+        type: Sequelize.TIME
       },
       created_at: {
         allowNull: false,
@@ -45,6 +38,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable('schedule_days')
   }
 }

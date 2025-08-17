@@ -12,18 +12,20 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       })
       User.belongsToMany(models.Club, {
-        through: 'user_clubs',
+        through: 'club_admins',
         foreignKey: 'user_id',
         otherKey: 'club_id',
-        as: 'clubs',
+        as: 'adminClubs',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
-      User.hasMany(models.Booking, {
+      User.belongsToMany(models.ClubAdmin, {
+        through: 'club_memberships',
         foreignKey: 'user_id',
-        as: 'bookings',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        otherKey: 'club_admin_id',
+        as: 'enrolledPrograms',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
     }
   }
@@ -43,15 +45,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true
       },
-      refreshToken: {
-        allowNull: true,
-        type: DataTypes.STRING
-      },
       level: {
         allowNull: false,
         type: DataTypes.STRING,
         defaultValue: 'beginner',
         validate: { isIn: [['beginner', 'intermediate', 'advanced']] }
+      },
+      refreshToken: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'refresh_token'
       }
     },
     {
@@ -60,10 +63,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'users',
       underscored: true,
       defaultScope: {
-        include: [
-          { association: 'roles', attributes: ['name'] },
-          { association: 'clubs', attributes: ['id', 'name', 'timeZone'], through: { attributes: [] } }
-        ]
+        include: [{ association: 'roles', attributes: ['name'] }]
       }
     }
   )
@@ -71,8 +71,8 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.getSafeData = function () {
     // Omit password, refreshToken, date
     // Convert roles to an array of role names
-    const { id, username, email, roles = [], clubs } = this
-    return { id, username, email, roles: roles.map(role => role.name), clubs }
+    const { id, username, email, roles } = this
+    return { id, username, email, roles: roles.map(role => role.name) }
   }
 
   return User

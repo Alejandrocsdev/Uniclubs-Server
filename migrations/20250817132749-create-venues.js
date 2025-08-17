@@ -9,21 +9,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      schedule_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: { model: 'schedules', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
       name: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      max_players: {
+      players_limit: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 4
+        type: Sequelize.INTEGER
+      },
+      sport_type: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,

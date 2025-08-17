@@ -2,33 +2,30 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('club_memberships', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      user_id: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.INTEGER
       },
-      password: {
+      club_admin_id: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
-      email: {
+      start_date: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.DATE
       },
-      level: {
+      end_date: {
         allowNull: false,
-        type: Sequelize.STRING,
-        defaultValue: 'beginner'
+        type: Sequelize.DATE
       },
-      refresh_token: {
+      status: {
         allowNull: true,
         type: Sequelize.STRING
       },
@@ -45,6 +42,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable('club_memberships')
   }
 }

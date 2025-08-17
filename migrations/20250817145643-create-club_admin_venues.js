@@ -2,35 +2,28 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('club_admin_venues', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      club_admin_id: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.INTEGER,
+        // Matches the 'club_admins' table in the ClubAdmin model
+        references: { model: 'club_admins', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      password: {
+      venue_id: {
         allowNull: false,
-        type: Sequelize.STRING
-      },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
-      },
-      level: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        defaultValue: 'beginner'
-      },
-      refresh_token: {
-        allowNull: true,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        // Matches the 'venues' table in the Venue model
+        references: { model: 'venues', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       created_at: {
         allowNull: false,
@@ -45,6 +38,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable('club_admin_venues')
   }
 }

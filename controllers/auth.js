@@ -176,10 +176,9 @@ class AuthController {
 
     // Step 2: Generate the token
     const token = jwt.signAdminLink(clubName)
-    console.log('token:', token)
 
     // Step 3: Create the full link to send
-    const link = `${clientUrl}/sign-up?token=${token}`
+    const link = `${clientUrl}/admin/sign-up?token=${token}`
 
     // Step 4: Send the email with the link
     await sendMail({ email, link, clubName }, 'adminLink')

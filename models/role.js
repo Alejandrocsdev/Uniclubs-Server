@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Role.belongsToMany(models.User, {
         through: 'user_roles',
-        foreignKey: 'role_id',
-        otherKey: 'user_id',
+        foreignKey: { name: 'roleId', field: 'role_id' },
+        otherKey: { name: 'userId', field: 'user_id' },
         as: 'users',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -28,5 +28,6 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true
     }
   )
+
   return Role
 }

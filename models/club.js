@@ -4,24 +4,12 @@ module.exports = (sequelize, DataTypes) => {
   class Club extends Model {
     static associate(models) {
       Club.belongsToMany(models.User, {
-        through: 'user_clubs',
-        foreignKey: 'club_id',
-        otherKey: 'user_id',
+        through: models.ClubAdmin,
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        otherKey: { name: 'userId', field: 'user_id' },
         as: 'admins',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
-      })
-      Club.hasMany(models.Schedule, {
-        foreignKey: 'club_id',
-        as: 'schedule',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      })
-      Club.hasMany(models.Booking, {
-        foreignKey: 'club_id',
-        as: 'bookings',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
       })
     }
   }
@@ -35,30 +23,17 @@ module.exports = (sequelize, DataTypes) => {
       timeZone: {
         allowNull: false,
         type: DataTypes.STRING,
-        validate: { isIn: [Intl.supportedValuesOf('timeZone')] }
+        validate: { isIn: [Intl.supportedValuesOf('timeZone')] },
+        field: 'time_zone'
       }
     },
     {
       sequelize,
       modelName: 'Club',
       tableName: 'clubs',
-      underscored: true,
-      defaultScope: {
-        include: [
-          {
-            association: 'schedule',
-            attributes: ['startDate', 'endDate', 'openTime', 'closeTime', 'slotDuration', 'slotBreak']
-          }
-        ]
-      }
+      underscored: true
     }
   )
-
-  Club.prototype.getSafeData = function () {
-    // Omit date
-    const { id, name, timeZone, schedule } = this
-    return { id, name, timeZone, schedule }
-  }
 
   return Club
 }

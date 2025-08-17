@@ -2,46 +2,40 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('schedules', {
+    await queryInterface.createTable('slots', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      club_id: {
+      venue_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'clubs', key: 'id' },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        // Matches the 'venues' table in the Venue model
+        references: { model: 'venues', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      start_date: {
+      date: {
         allowNull: false,
         type: Sequelize.DATEONLY
       },
-      end_date: {
-        allowNull: true,
-        type: Sequelize.DATEONLY
-      },
-      open_time: {
+      start_time: {
         allowNull: false,
-        type: Sequelize.TIME,
-        defaultValue: '09:00:00'
+        type: Sequelize.TIME
       },
-      close_time: {
+      end_time: {
         allowNull: false,
-        type: Sequelize.TIME,
-        defaultValue: '18:00:00'
+        type: Sequelize.TIME
       },
-      slot_duration: {
+      capacity: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 20
-      },
-      slot_break: {
-        allowNull: true,
         type: Sequelize.INTEGER
+      },
+      status: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
@@ -56,6 +50,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('schedules')
+    await queryInterface.dropTable('slots')
   }
 }

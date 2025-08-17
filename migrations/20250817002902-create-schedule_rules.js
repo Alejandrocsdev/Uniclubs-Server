@@ -1,0 +1,71 @@
+'use strict'
+
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('schedule_rules', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      club_admin_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      start_date: {
+        allowNull: false,
+        type: Sequelize.DATEONLY
+      },
+      end_date: {
+        allowNull: true,
+        type: Sequelize.DATEONLY
+      },
+      slot_duration: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      slot_break: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      booking_days: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      status: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      next_rule_start_date: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      has_next_rule: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
+      reminder_start_date: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      auto_rule_date: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+      }
+    })
+  },
+  async down(queryInterface) {
+    await queryInterface.dropTable('schedule_rules')
+  }
+}

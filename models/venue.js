@@ -3,41 +3,37 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     static associate(models) {
-      Venue.belongsTo(models.Schedule, {
-        foreignKey: 'schedule_id',
-        as: 'schedule',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+      Venue.belongsToMany(models.ClubAdmin, {
+        through: 'club_admin_venues',
+        foreignKey: { name: 'venueId', field: 'venue_id' },
+        otherKey: { name: 'clubAdminId', field: 'club_admin_id' },
+        as: 'programs',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
-      Venue.hasMany(models.Booking, {
-        foreignKey: 'venue_id',
-        as: 'bookings',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+      Venue.hasMany(models.Slot, {
+        foreignKey: { name: 'venueId', field: 'venue_id' },
+        as: 'slots',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
-    }
-
-    static default(count, scheduleId, maxPlayers) {
-      return Array.from({ length: count }, (_, i) => ({
-        scheduleId,
-        name: `Venue ${i + 1}`,
-        maxPlayers
-      }))
     }
   }
   Venue.init(
     {
-      scheduleId: {
-        allowNull: false,
-        type: DataTypes.INTEGER
-      },
       name: {
         allowNull: false,
         type: DataTypes.STRING
       },
-      maxPlayers: {
+      playersLimit: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        field: 'players_limit'
+      },
+      sportType: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        field: 'sport_type'
       }
     },
     {

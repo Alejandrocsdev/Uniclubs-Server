@@ -2,8 +2,8 @@
 
 const clubsData = [
   { name: 'A', time_zone: 'Europe/Amsterdam' },
-  { name: 'B', time_zone: 'Europe/Amsterdam' },
-  { name: 'C', time_zone: 'Europe/Amsterdam' }
+  { name: 'B', time_zone: 'Asia/Taipei' },
+  { name: 'C', time_zone: 'America/Montevideo' }
 ]
 
 module.exports = {

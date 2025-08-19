@@ -6,9 +6,8 @@ const { clubController } = require('../controllers')
 // Middlewares
 const { jwtAuth } = require('../middlewares')
 
-router.get('/', jwtAuth(), clubController.getAllClubs)
+router.get('/', jwtAuth(), clubController.getClubs)
 router.post('/', jwtAuth('owner'), clubController.createClub)
 router.get('/:clubId', jwtAuth(), clubController.getClub)
-router.post('/:clubId/schedule', jwtAuth('admin'), clubController.createSchedule)
 
 module.exports = router

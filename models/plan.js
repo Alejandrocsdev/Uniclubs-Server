@@ -1,22 +1,22 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-  class MembershipPlan extends Model {
+  class Plan extends Model {
     static associate(models) {
-      MembershipPlan.belongsTo(models.ClubAdmin, {
-        foreignKey: { name: 'clubAdminId', field: 'club_admin_id' },
+      Plan.belongsTo(models.Program, {
+        foreignKey: { name: 'programId', field: 'program_id' },
         as: 'program',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
     }
   }
-  MembershipPlan.init(
+  Plan.init(
     {
-      clubAdminId: {
+      programId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'club_admin_id'
+        field: 'program_id'
       },
       code: {
         allowNull: false,
@@ -48,11 +48,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'MembershipPlan',
-      tableName: 'membership_plans',
+      modelName: 'Plan',
+      tableName: 'plans',
       underscored: true
     }
   )
 
-  return MembershipPlan
+  return Plan
 }

@@ -2,41 +2,32 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('membership_plans', {
+    await queryInterface.createTable('program_memberships', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      club_admin_id: {
+      user_id: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      code: {
+      program_id: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
-      name: {
+      start_date: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.DATE
       },
-      duration_days: {
+      end_date: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      status: {
         allowNull: true,
-        type: Sequelize.INTEGER
-      },
-      price_cents: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      currency: {
-        allowNull: false,
         type: Sequelize.STRING
-      },
-      active: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: true
       },
       created_at: {
         allowNull: false,
@@ -51,6 +42,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('membership_plans')
+    await queryInterface.dropTable('program_memberships')
   }
 }

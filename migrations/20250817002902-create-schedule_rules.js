@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      club_admin_id: {
+      program_id: {
         allowNull: false,
         type: Sequelize.INTEGER
       },

@@ -3,10 +3,10 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     static associate(models) {
-      Venue.belongsToMany(models.ClubAdmin, {
-        through: 'club_admin_venues',
+      Venue.belongsToMany(models.Program, {
+        through: 'program_venues',
         foreignKey: { name: 'venueId', field: 'venue_id' },
-        otherKey: { name: 'clubAdminId', field: 'club_admin_id' },
+        otherKey: { name: 'programId', field: 'program_id' },
         as: 'programs',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'

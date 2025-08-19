@@ -3,8 +3,8 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class ScheduleRule extends Model {
     static associate(models) {
-      ScheduleRule.belongsTo(models.ClubAdmin, {
-        foreignKey: { name: 'clubAdminId', field: 'club_admin_id' },
+      ScheduleRule.belongsTo(models.Program, {
+        foreignKey: { name: 'programId', field: 'program_id' },
         as: 'program',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
@@ -19,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   ScheduleRule.init(
     {
-      clubAdminId: {
+      programId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'club_admin_id'
+        field: 'program_id'
       },
       startDate: {
         allowNull: false,

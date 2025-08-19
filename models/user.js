@@ -12,18 +12,18 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       })
       User.belongsToMany(models.Club, {
-        through: 'club_admins',
+        through: 'programs',
         foreignKey: 'user_id',
         otherKey: 'club_id',
-        as: 'adminClubs',
+        as: 'programs',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
-      User.belongsToMany(models.ClubAdmin, {
+      User.belongsToMany(models.Program, {
         through: 'club_memberships',
         foreignKey: 'user_id',
-        otherKey: 'club_admin_id',
-        as: 'enrolledPrograms',
+        otherKey: 'program_id',
+        as: 'memberships',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })

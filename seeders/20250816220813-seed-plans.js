@@ -1,8 +1,8 @@
 'use strict'
 
-const membershipPlansData = [
+const plansData = [
   {
-    club_admin_id: 1,
+    program_id: 1,
     code: '1D',
     name: 'Day Pass',
     duration_days: 1,
@@ -11,7 +11,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 1,
+    program_id: 1,
     code: '2W',
     name: '2-Week Membership',
     duration_days: 14,
@@ -20,7 +20,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 1,
+    program_id: 1,
     code: '2M',
     name: '2-Month Membership',
     duration_days: 60,
@@ -30,7 +30,7 @@ const membershipPlansData = [
   },
 
   {
-    club_admin_id: 2,
+    program_id: 2,
     code: '1D',
     name: 'Day Pass',
     duration_days: 1,
@@ -39,7 +39,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 2,
+    program_id: 2,
     code: '1M',
     name: '1-Month Membership',
     duration_days: 30,
@@ -48,7 +48,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 2,
+    program_id: 2,
     code: '6M',
     name: '6-Month Membership',
     duration_days: 180,
@@ -58,7 +58,7 @@ const membershipPlansData = [
   },
 
   {
-    club_admin_id: 3,
+    program_id: 3,
     code: 'TRI',
     name: 'Trial (3 Days)',
     duration_days: 3,
@@ -67,7 +67,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 3,
+    program_id: 3,
     code: '1M',
     name: '1-Month Membership',
     duration_days: 30,
@@ -76,7 +76,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 3,
+    program_id: 3,
     code: '3M',
     name: '3-Month Membership',
     duration_days: 90,
@@ -85,7 +85,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 4,
+    program_id: 4,
     code: '1D',
     name: 'Day Pass',
     duration_days: 1,
@@ -94,7 +94,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 4,
+    program_id: 4,
     code: '2M',
     name: '2-Month Membership',
     duration_days: 60,
@@ -103,7 +103,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 4,
+    program_id: 4,
     code: '6M',
     name: '6-Month Membership',
     duration_days: 180,
@@ -113,7 +113,7 @@ const membershipPlansData = [
   },
 
   {
-    club_admin_id: 5,
+    program_id: 5,
     code: '1D',
     name: 'Day Pass',
     duration_days: 1,
@@ -122,7 +122,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 5,
+    program_id: 5,
     code: '1M',
     name: '1-Month Membership',
     duration_days: 30,
@@ -131,7 +131,7 @@ const membershipPlansData = [
     active: true
   },
   {
-    club_admin_id: 5,
+    program_id: 5,
     code: '6M',
     name: '6-Month Membership',
     duration_days: 180,
@@ -143,10 +143,10 @@ const membershipPlansData = [
 
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.bulkInsert('membership_plans', membershipPlansData)
+    await queryInterface.bulkInsert('plans', plansData)
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete('membership_plans', null)
+    await queryInterface.bulkDelete('plans', null)
   }
 }

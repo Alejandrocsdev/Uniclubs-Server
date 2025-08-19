@@ -1,33 +1,33 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-  class ClubMembership extends Model {
+  class ProgramMembership extends Model {
     static associate(models) {
-      ClubMembership.belongsTo(models.User, {
+      ProgramMembership.belongsTo(models.User, {
         foreignKey: { name: 'userId', field: 'user_id' },
         as: 'member',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
-      ClubMembership.belongsTo(models.ClubAdmin, {
-        foreignKey: { name: 'clubAdminId', field: 'club_admin_id' },
+      ProgramMembership.belongsTo(models.Program, {
+        foreignKey: { name: 'programId', field: 'program_id' },
         as: 'program',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
     }
   }
-  ClubMembership.init(
+  ProgramMembership.init(
     {
       userId: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'user_id'
       },
-      clubAdminId: {
+      programId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'club_admin_id'
+        field: 'program_id'
       },
       startDate: {
         allowNull: false,
@@ -46,11 +46,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'ClubMembership',
-      tableName: 'club_memberships',
+      modelName: 'ProgramMembership',
+      tableName: 'program_memberships',
       underscored: true
     }
   )
 
-  return ClubMembership
+  return ProgramMembership
 }

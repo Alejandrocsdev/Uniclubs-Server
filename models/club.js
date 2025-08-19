@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class Club extends Model {
     static associate(models) {
       Club.belongsToMany(models.User, {
-        through: models.ClubAdmin,
+        through: models.Program,
         foreignKey: { name: 'clubId', field: 'club_id' },
         otherKey: { name: 'userId', field: 'user_id' },
         as: 'admins',

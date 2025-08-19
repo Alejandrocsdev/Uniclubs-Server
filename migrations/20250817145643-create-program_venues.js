@@ -2,26 +2,26 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('club_admins', {
+    await queryInterface.createTable('program_venues', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      program_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // Matches the 'users' table in the User model
-        references: { model: 'users', key: 'id' },
+        // Matches the 'programs' table in the Program model
+        references: { model: 'programs', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      club_id: {
+      venue_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // Matches the 'clubs' table in the Club model
-        references: { model: 'clubs', key: 'id' },
+        // Matches the 'venues' table in the Venue model
+        references: { model: 'venues', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
@@ -37,8 +37,7 @@ module.exports = {
       }
     })
   },
-
   async down(queryInterface) {
-    await queryInterface.dropTable('club_admins')
+    await queryInterface.dropTable('program_venues')
   }
 }

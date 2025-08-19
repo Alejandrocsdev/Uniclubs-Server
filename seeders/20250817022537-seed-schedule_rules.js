@@ -2,7 +2,7 @@
 
 const scheduleRulesData = [
   {
-    club_admin_id: 1,
+    program_id: 1,
     start_date: '2025-08-16',
     end_date: '2025-09-30',
     slot_duration: 20,
@@ -15,7 +15,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-09-23'
   },
   {
-    club_admin_id: 2,
+    program_id: 2,
     start_date: '2025-08-16',
     end_date: '2025-09-30',
     slot_duration: 20,
@@ -28,7 +28,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-09-23'
   },
   {
-    club_admin_id: 3,
+    program_id: 3,
     start_date: '2025-06-01',
     end_date: '2025-07-31',
     slot_duration: 20,
@@ -41,7 +41,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-07-23'
   },
   {
-    club_admin_id: 4,
+    program_id: 4,
     start_date: '2025-08-16',
     end_date: '2025-09-30',
     slot_duration: 20,
@@ -54,7 +54,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-09-23'
   },
   {
-    club_admin_id: 5,
+    program_id: 5,
     start_date: '2025-08-16',
     end_date: '2025-09-30',
     slot_duration: 30,
@@ -67,7 +67,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-09-23'
   },
   {
-    club_admin_id: 1,
+    program_id: 1,
     start_date: '2025-10-01',
     end_date: '2025-11-30',
     slot_duration: 20,
@@ -80,7 +80,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-11-23'
   },
   {
-    club_admin_id: 3,
+    program_id: 3,
     start_date: '2025-08-01',
     end_date: '2025-09-30',
     slot_duration: 20,
@@ -93,7 +93,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-09-23'
   },
   {
-    club_admin_id: 4,
+    program_id: 4,
     start_date: '2025-10-01',
     end_date: '2025-11-30',
     slot_duration: 30,
@@ -106,7 +106,7 @@ const scheduleRulesData = [
     auto_rule_date: '2025-11-23'
   },
   {
-    club_admin_id: 5,
+    program_id: 5,
     start_date: '2025-10-01',
     end_date: '2025-11-30',
     slot_duration: 30,

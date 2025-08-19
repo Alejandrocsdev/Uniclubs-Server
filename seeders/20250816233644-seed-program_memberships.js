@@ -1,6 +1,6 @@
 'use strict'
 
-const clubMembershipsData = [
+const ProgramMembershipsData = [
   { user_id: 1, program_id: 3, start_date: '2025-08-10', end_date: '2025-09-09', status: 'active' },
   { user_id: 2, program_id: 2, start_date: '2025-07-15', end_date: '2025-09-13', status: 'active' },
   { user_id: 2, program_id: 4, start_date: '2025-08-01', end_date: '2025-09-30', status: 'active' },
@@ -17,7 +17,7 @@ const clubMembershipsData = [
 
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.bulkInsert('program_memberships', clubMembershipsData)
+    await queryInterface.bulkInsert('program_memberships', ProgramMembershipsData)
   },
 
   async down(queryInterface) {

@@ -15,14 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
-      Program.hasMany(models.MembershipPlan, {
+      Program.hasMany(models.Plan, {
         foreignKey: { name: 'programId', field: 'program_id' },
         as: 'plans',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
       Program.belongsToMany(models.User, {
-        through: models.ClubMembership,
+        through: models.ProgramMembership,
         foreignKey: { name: 'programId', field: 'program_id' },
         otherKey: { name: 'userId', field: 'user_id' },
         as: 'members',

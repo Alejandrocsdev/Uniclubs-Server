@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         through: 'programs',
         foreignKey: 'user_id',
         otherKey: 'club_id',
-        as: 'programs',
+        as: 'clubs',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
       User.belongsToMany(models.Program, {
-        through: 'club_memberships',
+        through: 'program_memberships',
         foreignKey: 'user_id',
         otherKey: 'program_id',
         as: 'memberships',

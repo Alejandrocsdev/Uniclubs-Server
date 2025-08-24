@@ -77,8 +77,8 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.getSafeData = function () {
     // Omit password, refreshToken, date
     // Convert roles to an array of role names
-    const { id, username, email, roles, clubs } = this
-    return { id, username, email, roles: roles.map(role => role.name), clubs }
+    const { id, uid, username, email, roles, clubs } = this
+    return { id, uid, username, email, roles: roles.map(role => role.name), clubs }
   }
 
   return User

@@ -9,6 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      uid: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        unique: true
+      },
       username: {
         allowNull: false,
         type: Sequelize.STRING,
@@ -22,11 +27,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
         unique: true
-      },
-      level: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        defaultValue: 'beginner'
       },
       refresh_token: {
         allowNull: true,

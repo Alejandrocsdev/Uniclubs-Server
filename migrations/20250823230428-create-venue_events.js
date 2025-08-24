@@ -2,28 +2,28 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('schedule_days', {
+    await queryInterface.createTable('venue_events', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      schedule_rule_id: {
+      venue_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        // Matches the 'venues' table in the Venue model
+        references: { model: 'venues', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      day: {
+      event_id: {
         allowNull: false,
-        type: Sequelize.ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
-      },
-      open_time: {
-        allowNull: false,
-        type: Sequelize.TIME
-      },
-      close_time: {
-        allowNull: true,
-        type: Sequelize.TIME
+        type: Sequelize.INTEGER,
+        // Matches the 'events' table in the Event model
+        references: { model: 'events', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       created_at: {
         allowNull: false,
@@ -38,6 +38,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('schedule_days')
+    await queryInterface.dropTable('venue_events')
   }
 }

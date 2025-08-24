@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
+      Booking.belongsTo(models.User, {
+        foreignKey: { name: 'userId', field: 'user_id' },
+        as: 'member',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      })
     }
   }
   Booking.init(
@@ -18,9 +24,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         field: 'slot_id'
       },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'user_id'
+      },
       size: {
         allowNull: false,
         type: DataTypes.INTEGER
+      },
+      level: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: 'beginner',
+        validate: { isIn: [['beginner', 'intermediate', 'advanced']] }
       },
       status: {
         allowNull: false,

@@ -2,16 +2,20 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('schedule_rules', {
+    await queryInterface.createTable('schedules', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      program_id: {
+      club_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        // Matches the 'clubs' table in the Club model
+        references: { model: 'clubs', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       start_date: {
         allowNull: false,
@@ -66,6 +70,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('schedule_rules')
+    await queryInterface.dropTable('schedules')
   }
 }

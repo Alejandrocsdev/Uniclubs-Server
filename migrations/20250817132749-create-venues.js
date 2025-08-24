@@ -9,6 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      club_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        // Matches the 'clubs' table in the Club model
+        references: { model: 'clubs', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING

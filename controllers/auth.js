@@ -1,5 +1,5 @@
 // Models
-const { User, Otp, Role, Club } = require('../models')
+const { User, Otp, Role, Token, Club } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -9,7 +9,7 @@ const sendMail = require('../config/email')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { jwt, cookie, encrypt, clientUrl } = require('../utils')
+const { jwt, cookie, encrypt } = require('../utils')
 
 class AuthController {
   getAuthUser = asyncError(async (req, res) => {
@@ -54,38 +54,69 @@ class AuthController {
     if (!role) throw new CustomError(500, 'User role not found.')
 
     const hashedPwd = await encrypt.hash(password)
-    const user = await User.create({ username, password: hashedPwd, email })
+    const attempts = 3
 
-    await user.addRole(role)
+    for (let i = 0; i < attempts; i++) {
+      const uid = encrypt.uid()
 
-    await otp.update({ expireTime: Date.now() })
+      try {
+        const user = await User.create({ uid, username, password: hashedPwd, email })
 
-    res.status(201).json({ message: 'User registered successfully.' })
+        await user.addRole(role)
+
+        await otp.update({ expireTime: Date.now() })
+
+        return res.status(201).json({ message: 'User registered successfully.' })
+      } catch (error) {
+        if (error.name === 'SequelizeUniqueConstraintError' && error.fields?.uid) {
+          if (i < attempts - 1) continue
+          throw new CustomError(500, 'uid generation failed.')
+        }
+        throw error
+      }
+    }
   })
 
-  // signUpAdmin = asyncError(async (req, res) => {
-  //   const { username, password, email, token } = req.body
-  //   const { otp } = req
+  signUpAdmin = asyncError(async (req, res) => {
+    const { username, password, email, token } = req.body
+    const { otp } = req
 
-  //   const { clubName } = jwt.verifyToken(token, 'al')
+    const hashedToken = encrypt.sha256(token)
 
-  //   const roles = await Role.findAll({ where: { name: ['user', 'admin'] } })
-  //   if (roles.length !== 2) throw new CustomError(500, 'Required roles (user/admin) not found.')
+    const tokenRecord = await Token.findOne({ where: { token: hashedToken } })
+    if (!tokenRecord) throw new CustomError(400, 'Invalid token.')
 
-  //   const club = await Club.findOne({ where: { name: clubName } })
-  //   if (!club) throw new CustomError(404, 'Club not found.')
+    const { clubId } = tokenRecord
 
-  //   const hashedPwd = await encrypt.hash(password)
-  //   const user = await User.create({ username, password: hashedPwd, email })
+    const club = await Club.findByPk(clubId)
+    if (!club) throw new CustomError(404, 'Club not found.')
 
-  //   await user.addRoles(roles)
+    const roles = await Role.findAll({ where: { name: ['user', 'admin'] } })
+    if (!roles) throw new CustomError(500, 'User role not found.')
 
-  //   await user.addClub(club)
+    const hashedPwd = await encrypt.hash(password)
+    const attempts = 3
 
-  //   await otp.update({ expireTime: Date.now() })
+    for (let i = 0; i < attempts; i++) {
+      const uid = encrypt.uid()
 
-  //   res.status(201).json({ message: 'Admin registered successfully.' })
-  // })
+      try {
+        const user = await User.create({ uid, username, password: hashedPwd, email })
+
+        await user.addRoles(roles)
+        await user.addClub(club)
+        await otp.update({ expireTime: Date.now() })
+
+        return res.status(201).json({ message: 'Admin registered successfully.' })
+      } catch (error) {
+        if (error.name === 'SequelizeUniqueConstraintError' && error.fields?.uid) {
+          if (i < attempts - 1) continue
+          throw new CustomError(500, 'uid generation failed.')
+        }
+        throw error
+      }
+    }
+  })
 
   signOut = asyncError(async (req, res) => {
     const { user } = req
@@ -109,15 +140,15 @@ class AuthController {
     const otpRecord = await Otp.findOne({ where: { email, purpose } })
 
     if (otpRecord) {
-      // Case 1: Email already exists — update its OTP and expiration time
+      // Case 1: OTP already exists — update its OTP and expiration time
       await otpRecord.update({ otp: hashedOtp, expireTime })
     } else {
       // lt: less than
-      // Case 2: Email does not exist — check for any expired record to reuse
-      const expiredRecord = await Otp.findOne({ where: { email, expireTime: { [Op.lt]: Date.now() }, purpose } })
+      // Case 2: Email does not exists — check for any expired record to reuse
+      const expiredRecord = await Otp.findOne({ where: { expireTime: { [Op.lt]: Date.now() } } })
       if (expiredRecord) {
         // Case 2a: Found expired record — update it with new email, OTP, and expiration time
-        await expiredRecord.update({ otp: hashedOtp, email, expireTime })
+        await expiredRecord.update({ otp: hashedOtp, email, expireTime, purpose })
       } else {
         // Case 2b: No expired record — create a new OTP entry
         await Otp.create({ otp: hashedOtp, email, expireTime, purpose })
@@ -159,24 +190,20 @@ class AuthController {
     res.status(200).json({ message: 'User username sent successfully.' })
   })
 
-  // adminLink = asyncError(async (req, res) => {
-  //   const { email, clubName } = req.body
+  verifyToken = asyncError(async (req, res) => {
+    const { token } = req.params
+    const hashedToken = encrypt.sha256(token)
 
-  //   // Step 1: Validate that the club exists
-  //   const club = await Club.findOne({ where: { name: clubName } })
-  //   if (!club) throw new CustomError(404, 'Club not found.')
+    const tokenRecord = await Token.findOne({ where: { token: hashedToken } })
+    if (!tokenRecord) throw new CustomError(400, 'Invalid token.')
 
-  //   // Step 2: Generate the token
-  //   const token = jwt.signAdminLink(clubName)
+    const { clubId } = tokenRecord
 
-  //   // Step 3: Create the full link to send
-  //   const link = `${clientUrl}/admin/sign-up?token=${token}`
+    const club = await Club.findByPk(clubId, { attributes: ['id', 'name'] })
+    if (!club) throw new CustomError(404, 'Club not found.')
 
-  //   // Step 4: Send the email with the link
-  //   await sendMail({ email, link, clubName }, 'adminLink')
-
-  //   res.status(200).json({ message: 'Admin sign-up link sent successfully.' })
-  // })
+    res.status(200).json({ message: 'Admin registration token verified successfully.', clubName: club.name })
+  })
 }
 
 module.exports = new AuthController()

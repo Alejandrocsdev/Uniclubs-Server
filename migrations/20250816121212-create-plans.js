@@ -9,9 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      program_id: {
+      club_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        // Matches the 'clubs' table in the Club model
+        references: { model: 'clubs', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       code: {
         allowNull: false,
@@ -33,10 +37,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      active: {
+      status: {
         allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: true
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,

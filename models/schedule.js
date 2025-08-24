@@ -1,28 +1,28 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-  class ScheduleRule extends Model {
+  class Schedule extends Model {
     static associate(models) {
-      ScheduleRule.belongsTo(models.Program, {
-        foreignKey: { name: 'programId', field: 'program_id' },
-        as: 'program',
+      Schedule.belongsTo(models.Club, {
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        as: 'club',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
-      ScheduleRule.hasMany(models.ScheduleDay, {
-        foreignKey: { name: 'scheduleRuleId', field: 'schedule_rule_id' },
-        as: 'scheduleDays',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+      Schedule.hasMany(models.Event, {
+        foreignKey: { name: 'scheduleId', field: 'schedule_id' },
+        as: 'events',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
     }
   }
-  ScheduleRule.init(
+  Schedule.init(
     {
-      programId: {
+      clubId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'program_id'
+        field: 'club_id'
       },
       startDate: {
         allowNull: false,
@@ -77,11 +77,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'ScheduleRule',
-      tableName: 'schedule_rules',
+      modelName: 'Schedule',
+      tableName: 'schedules',
       underscored: true
     }
   )
 
-  return ScheduleRule
+  return Schedule
 }

@@ -3,13 +3,11 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     static associate(models) {
-      Venue.belongsToMany(models.Program, {
-        through: 'program_venues',
-        foreignKey: { name: 'venueId', field: 'venue_id' },
-        otherKey: { name: 'programId', field: 'program_id' },
-        as: 'programs',
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+      Venue.belongsTo(models.Club, {
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        as: 'club',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       })
       Venue.hasMany(models.Slot, {
         foreignKey: { name: 'venueId', field: 'venue_id' },
@@ -17,10 +15,23 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
+      Venue.belongsToMany(models.Event, {
+        through: 'venue_events',
+        foreignKey: { name: 'venueId', field: 'venue_id' },
+        otherKey: { name: 'eventId', field: 'event_id' },
+        as: 'events',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      })
     }
   }
   Venue.init(
     {
+      clubId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'club_id'
+      },
       name: {
         allowNull: false,
         type: DataTypes.STRING

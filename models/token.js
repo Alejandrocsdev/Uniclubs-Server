@@ -1,12 +1,17 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-  class Otp extends Model {
+  class Token extends Model {
     // static associate(models) {}
   }
-  Otp.init(
+  Token.init(
     {
-      otp: {
+      clubId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'club_id'
+      },
+      token: {
         allowNull: false,
         type: DataTypes.STRING
       },
@@ -18,21 +23,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.BIGINT,
         field: 'expire_time'
-      },
-      purpose: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        validate: { isIn: [['sign-up:user', 'sign-up:admin', 'reset-password', 'recover-username']] }
       }
     },
     {
       sequelize,
-      modelName: 'Otp',
-      tableName: 'otps',
+      modelName: 'Token',
+      tableName: 'tokens',
       underscored: true,
-      indexes: [{ unique: true, fields: ['email', 'purpose'] }]
+      indexes: [{ unique: true, fields: ['club_id', 'email'] }]
     }
   )
 
-  return Otp
+  return Token
 }

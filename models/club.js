@@ -4,10 +4,28 @@ module.exports = (sequelize, DataTypes) => {
   class Club extends Model {
     static associate(models) {
       Club.belongsToMany(models.User, {
-        through: models.Program,
+        through: 'user_clubs',
         foreignKey: { name: 'clubId', field: 'club_id' },
         otherKey: { name: 'userId', field: 'user_id' },
         as: 'admins',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      })
+      Club.hasMany(models.Plan, {
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        as: 'plans',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      })
+      Club.hasMany(models.Venue, {
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        as: 'venues',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      })
+      Club.hasMany(models.Schedule, {
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        as: 'schedules',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })

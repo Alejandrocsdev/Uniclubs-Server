@@ -5,25 +5,29 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsToMany(models.Role, {
         through: 'user_roles',
-        foreignKey: 'user_id',
-        otherKey: 'role_id',
+        foreignKey: { name: 'userId', field: 'user_id' },
+        otherKey: { name: 'roleId', field: 'role_id' },
         as: 'roles',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
       User.belongsToMany(models.Club, {
-        through: 'programs',
-        foreignKey: 'user_id',
-        otherKey: 'club_id',
+        through: 'user_clubs',
+        foreignKey: { name: 'userId', field: 'user_id' },
+        otherKey: { name: 'clubId', field: 'club_id' },
         as: 'clubs',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
-      User.belongsToMany(models.Program, {
-        through: 'program_memberships',
-        foreignKey: 'user_id',
-        otherKey: 'program_id',
+      User.hasMany(models.Membership, {
+        foreignKey: { name: 'userId', field: 'user_id' },
         as: 'memberships',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      })
+      User.hasMany(models.Booking, {
+        foreignKey: { name: 'userId', field: 'user_id' },
+        as: 'bookings',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
@@ -31,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
+      uid: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        unique: true
+      },
       username: {
         allowNull: false,
         type: DataTypes.STRING,
@@ -45,12 +54,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true
       },
-      level: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        defaultValue: 'beginner',
-        validate: { isIn: [['beginner', 'intermediate', 'advanced']] }
-      },
       refreshToken: {
         allowNull: true,
         type: DataTypes.STRING,
@@ -63,7 +66,10 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'users',
       underscored: true,
       defaultScope: {
-        include: [{ association: 'roles', attributes: ['name'] }]
+        include: [
+          { association: 'roles', attributes: ['name'] },
+          { association: 'clubs', attributes: ['id', 'name', 'time_zone'], through: { attributes: [] } }
+        ]
       }
     }
   )
@@ -71,8 +77,8 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.getSafeData = function () {
     // Omit password, refreshToken, date
     // Convert roles to an array of role names
-    const { id, username, email, roles } = this
-    return { id, username, email, roles: roles.map(role => role.name) }
+    const { id, username, email, roles, clubs } = this
+    return { id, username, email, roles: roles.map(role => role.name), clubs }
   }
 
   return User

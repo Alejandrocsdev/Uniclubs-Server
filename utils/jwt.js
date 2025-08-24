@@ -20,19 +20,10 @@ class Jwt {
     }
   }
 
-  signAdminLink(clubName) {
-    try {
-      return jwt.sign({ clubName }, process.env.AL_SECRET, { expiresIn: '24h' })
-    } catch (error) {
-      throw new CustomError(500, 'Admin link token generation failed')
-    }
-  }
-
   verifyToken(token, type) {
     const secretMap = {
       at: process.env.AT_SECRET,
       rt: process.env.RT_SECRET,
-      al: process.env.AL_SECRET
     }
 
     const secret = secretMap[type]

@@ -3,20 +3,26 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Plan extends Model {
     static associate(models) {
-      Plan.belongsTo(models.Program, {
-        foreignKey: { name: 'programId', field: 'program_id' },
-        as: 'program',
+      Plan.belongsTo(models.Club, {
+        foreignKey: { name: 'clubId', field: 'club_id' },
+        as: 'club',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
+      })
+      Plan.hasMany(models.Membership, {
+        foreignKey: { name: 'planId', field: 'plan_id' },
+        as: 'memberships',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       })
     }
   }
   Plan.init(
     {
-      programId: {
+      clubId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'program_id'
+        field: 'club_id'
       },
       code: {
         allowNull: false,
@@ -40,10 +46,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING
       },
-      active: {
+     status: {
         allowNull: false,
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+        type: DataTypes.STRING
       }
     },
     {

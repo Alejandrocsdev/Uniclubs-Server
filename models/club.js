@@ -52,7 +52,8 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       defaultScope: {
         include: [
-          { association: 'schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } }
+          { association: 'schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+          { association: 'venues', attributes: { exclude: ['createdAt', 'updatedAt'] } }
         ]
       }
     }
@@ -60,8 +61,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Club.prototype.getSafeData = function () {
     // Omit date
-    const { id, name, timeZone, schedules } = this
-    return { id, name, timeZone, schedules }
+    const { id, name, timeZone, admins, schedules, venues } = this
+    return { id, name, timeZone, admins, schedules, venues }
   }
 
   return Club

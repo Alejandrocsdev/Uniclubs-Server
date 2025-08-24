@@ -1,5 +1,5 @@
 // Models
-const { Club, Token, User, Role, Schedule } = require('../models')
+const { Club, Token, User, Role, Venue } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -13,14 +13,32 @@ const { encrypt, time, clientUrl } = require('../utils')
 
 class OwnerController {
   createClub = asyncError(async (req, res) => {
-    const { name, timeZone } = req.body
+    const { name, timeZone, slotDuration, slotBreak, bookingDays, venuesCount } = req.body
 
     const club = await Club.create({ name, timeZone })
 
     const startDate = time.today(timeZone)
     const { endDate, nextRuleStartDate, reminderStartDate, autoRuleDate } = time.scheduleDates(startDate)
 
-    await club.createSchedule({ startDate, endDate, nextRuleStartDate, reminderStartDate, autoRuleDate })
+    await club.createSchedule({
+      startDate,
+      endDate,
+      slotDuration,
+      slotBreak,
+      bookingDays,
+      nextRuleStartDate,
+      reminderStartDate,
+      autoRuleDate
+    })
+
+    const venuesPayload = Array.from({ length: venuesCount }, (_, i) => ({
+      clubId: club.id,
+      name: `Venue ${i + 1}`,
+      playersLimit: 4,
+      sportType: 'badminton'
+    }))
+
+    await Venue.bulkCreate(venuesPayload)
 
     res.status(201).json({ message: 'Club created successfully.' })
   })

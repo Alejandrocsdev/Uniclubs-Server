@@ -37,19 +37,16 @@ module.exports = (sequelize, DataTypes) => {
       slotDuration: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        defaultValue: 20,
         field: 'slot_duration'
       },
       slotBreak: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        defaultValue: 0,
         field: 'slot_break'
       },
       bookingDays: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        defaultValue: 1,
         field: 'booking_days'
       },
       status: {

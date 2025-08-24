@@ -27,18 +27,15 @@ module.exports = {
       },
       slot_duration: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 20,
+        type: Sequelize.INTEGER
       },
       slot_break: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        type: Sequelize.INTEGER
       },
       booking_days: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 1,
+        type: Sequelize.INTEGER
       },
       status: {
         allowNull: false,

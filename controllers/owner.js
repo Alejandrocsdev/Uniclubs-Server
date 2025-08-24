@@ -1,5 +1,5 @@
 // Models
-const { Club, Token } = require('../models')
+const { Club, Token, User, Role } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -53,6 +53,30 @@ class OwnerController {
     await sendMail({ email, link, club: club.name }, 'adminLink')
 
     res.status(200).json({ message: 'Admin sign-up link sent successfully.' })
+  })
+
+  makeAdmin = asyncError(async (req, res) => {
+    const { uid, username, email, clubId } = req.body
+
+    const user = await User.findOne({ where: { uid } })
+    if (!user) throw new CustomError(404, 'User not found.')
+
+    if (user.username !== username) throw new CustomError(400, 'Username does not match this user.')
+    if (user.email !== email) throw new CustomError(400, 'Email does not match this user.')
+
+    const role = await Role.findOne({ where: { name: 'admin' } })
+    if (!role) throw new CustomError(500, 'User role not found.')
+
+    const club = await Club.findByPk(clubId)
+    if (!club) throw new CustomError(404, 'Club not found.')
+
+    const isAdmin = await !user.hasRole(role)
+    if (!isAdmin) await user.addRole(role)
+
+    const hasClub = await user.hasClub(club)
+    if (!hasClub) await user.addClub(club)
+
+    res.status(200).json({ message: 'Admin role and club added to user successfully.' })
   })
 }
 

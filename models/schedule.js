@@ -37,25 +37,29 @@ module.exports = (sequelize, DataTypes) => {
       slotDuration: {
         allowNull: false,
         type: DataTypes.INTEGER,
+        defaultValue: 20,
         field: 'slot_duration'
       },
       slotBreak: {
         allowNull: false,
         type: DataTypes.INTEGER,
+        defaultValue: 0,
         field: 'slot_break'
       },
       bookingDays: {
         allowNull: false,
         type: DataTypes.INTEGER,
+        defaultValue: 1,
         field: 'booking_days'
       },
       status: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: 'closed'
       },
       nextRuleStartDate: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         field: 'next_rule_start_date'
       },
       hasNextRule: {
@@ -66,12 +70,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       reminderStartDate: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         field: 'reminder_start_date'
       },
       autoRuleDate: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         field: 'auto_rule_date'
       }
     },

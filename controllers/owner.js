@@ -1,5 +1,5 @@
 // Models
-const { Club, Token, User, Role } = require('../models')
+const { Club, Token, User, Role, Schedule } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -9,13 +9,18 @@ const sendMail = require('../config/email')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { encrypt, clientUrl } = require('../utils')
+const { encrypt, time, clientUrl } = require('../utils')
 
 class OwnerController {
   createClub = asyncError(async (req, res) => {
     const { name, timeZone } = req.body
 
-    await Club.create({ name, timeZone })
+    const club = await Club.create({ name, timeZone })
+
+    const startDate = time.today(timeZone)
+    const { endDate, nextRuleStartDate, reminderStartDate, autoRuleDate } = time.scheduleDates(startDate)
+
+    await club.createSchedule({ startDate, endDate, nextRuleStartDate, reminderStartDate, autoRuleDate })
 
     res.status(201).json({ message: 'Club created successfully.' })
   })

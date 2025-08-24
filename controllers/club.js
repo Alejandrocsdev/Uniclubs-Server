@@ -9,7 +9,9 @@ class ClubController {
   getClubs = asyncError(async (req, res) => {
     const clubs = await Club.findAll()
 
-    res.status(200).json({ message: 'All clubs retrieved successfully.', clubs })
+    const safeClubs = clubs.map(club => club.getSafeData())
+
+    res.status(200).json({ message: 'All clubs retrieved successfully.', clubs: safeClubs })
   })
 
   getClub = asyncError(async (req, res) => {
@@ -18,7 +20,7 @@ class ClubController {
     const club = await Club.findByPk(clubId)
     if (!club) throw new CustomError(404, 'Club not found.')
 
-    res.status(200).json({ message: 'Club retrieved successfully.', club })
+    res.status(200).json({ message: 'Club retrieved successfully.', club: club.getSafeData() })
   })
 
   createClub = asyncError(async (req, res) => {

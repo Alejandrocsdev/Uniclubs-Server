@@ -9,9 +9,6 @@ const schedulesData = [
     slot_break: 0,
     booking_days: 7,
     status: 'closed',
-    next_rule_start_date: '2025-09-01',
-    has_next_rule: true,
-    reminder_start_date: '2025-09-16',
     auto_rule_date: '2025-09-23'
   },
   {
@@ -22,9 +19,6 @@ const schedulesData = [
     slot_break: 0,
     booking_days: 7,
     status: 'open',
-    next_rule_start_date: '2025-09-01',
-    has_next_rule: true,
-    reminder_start_date: '2025-09-16',
     auto_rule_date: '2025-09-23'
   },
   {
@@ -35,9 +29,6 @@ const schedulesData = [
     slot_break: 0,
     booking_days: 7,
     status: 'closed',
-    next_rule_start_date: '2025-08-01',
-    has_next_rule: true,
-    reminder_start_date: '2025-07-16',
     auto_rule_date: '2025-07-23'
   },
   {
@@ -48,9 +39,6 @@ const schedulesData = [
     slot_break: 0,
     booking_days: 7,
     status: 'draft',
-    next_rule_start_date: '2025-11-01',
-    has_next_rule: false,
-    reminder_start_date: '2025-11-16',
     auto_rule_date: '2025-11-23'
   },
   {
@@ -61,9 +49,6 @@ const schedulesData = [
     slot_break: 0,
     booking_days: 7,
     status: 'open',
-    next_rule_start_date: '2025-09-01',
-    has_next_rule: false,
-    reminder_start_date: '2025-09-16',
     auto_rule_date: '2025-09-23'
   }
 ]

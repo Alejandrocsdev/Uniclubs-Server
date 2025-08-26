@@ -42,19 +42,6 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'closed'
       },
-      next_rule_start_date: {
-        allowNull: false,
-        type: Sequelize.DATEONLY
-      },
-      has_next_rule: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-      },
-      reminder_start_date: {
-        allowNull: false,
-        type: Sequelize.DATEONLY
-      },
       auto_rule_date: {
         allowNull: false,
         type: Sequelize.DATEONLY

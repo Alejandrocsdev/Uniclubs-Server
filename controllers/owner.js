@@ -9,7 +9,7 @@ const sendMail = require('../config/email')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { encrypt, time, clientUrl } = require('../utils')
+const { date, encrypt, clientUrl } = require('../utils')
 
 class OwnerController {
   createClub = asyncError(async (req, res) => {
@@ -17,8 +17,9 @@ class OwnerController {
 
     const club = await Club.create({ name, timeZone })
 
-    const startDate = time.today(timeZone)
-    const { endDate, nextRuleStartDate, reminderStartDate, autoRuleDate } = time.scheduleDates(startDate)
+    const startDate = date.today(timeZone)
+    const endDate = date.endOfYear(startDate)
+    const autoRuleDate = `${date.year(startDate)}-10-01`
 
     await club.createSchedule({
       startDate,
@@ -26,8 +27,6 @@ class OwnerController {
       slotDuration,
       slotBreak,
       bookingDays,
-      nextRuleStartDate,
-      reminderStartDate,
       autoRuleDate
     })
 

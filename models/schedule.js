@@ -54,22 +54,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'closed'
       },
-      nextRuleStartDate: {
-        allowNull: false,
-        type: DataTypes.DATEONLY,
-        field: 'next_rule_start_date'
-      },
-      hasNextRule: {
-        allowNull: false,
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        field: 'has_next_rule'
-      },
-      reminderStartDate: {
-        allowNull: false,
-        type: DataTypes.DATEONLY,
-        field: 'reminder_start_date'
-      },
       autoRuleDate: {
         allowNull: false,
         type: DataTypes.DATEONLY,

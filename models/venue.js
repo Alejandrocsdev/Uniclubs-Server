@@ -15,11 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
-      Venue.belongsToMany(models.Event, {
-        through: 'venue_events',
+      Venue.hasMany(models.Schedule, {
         foreignKey: { name: 'venueId', field: 'venue_id' },
-        otherKey: { name: 'eventId', field: 'event_id' },
-        as: 'events',
+        as: 'schedules',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })

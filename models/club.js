@@ -23,12 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
-      Club.hasMany(models.Schedule, {
-        foreignKey: { name: 'clubId', field: 'club_id' },
-        as: 'schedules',
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      })
     }
   }
   Club.init(
@@ -43,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: { isIn: [Intl.supportedValuesOf('timeZone')] },
         field: 'time_zone'
+      },
+      bookingDays: {
+        allowNull: false,
+        type: DataTypes.INTEGER
       }
     },
     {
@@ -51,18 +49,15 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'clubs',
       underscored: true,
       defaultScope: {
-        include: [
-          { association: 'schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
-          { association: 'venues', attributes: { exclude: ['createdAt', 'updatedAt'] } }
-        ]
+        include: [{ association: 'venues', attributes: { exclude: ['createdAt', 'updatedAt'] } }]
       }
     }
   )
 
   Club.prototype.getSafeData = function () {
     // Omit date
-    const { id, name, timeZone, admins, schedules, venues } = this
-    return { id, name, timeZone, admins, schedules, venues }
+    const { id, name, timeZone, admins, venues } = this
+    return { id, name, timeZone, admins, venues }
   }
 
   return Club

@@ -9,35 +9,13 @@ const sendMail = require('../config/email')
 // Errors
 const CustomError = require('../errors/CustomError')
 // Utilities
-const { date, encrypt, clientUrl } = require('../utils')
+const { encrypt, clientUrl } = require('../utils')
 
 class OwnerController {
   createClub = asyncError(async (req, res) => {
-    const { name, timeZone, slotDuration, slotBreak, bookingDays, venuesCount } = req.body
+    const { name, timeZone, bookingDays } = req.body
 
-    const club = await Club.create({ name, timeZone })
-
-    const startDate = date.today(timeZone)
-    const endDate = date.endOfYear(startDate)
-    const autoRuleDate = `${date.year(startDate)}-10-01`
-
-    await club.createSchedule({
-      startDate,
-      endDate,
-      slotDuration,
-      slotBreak,
-      bookingDays,
-      autoRuleDate
-    })
-
-    const venuesPayload = Array.from({ length: venuesCount }, (_, i) => ({
-      clubId: club.id,
-      name: `Venue ${i + 1}`,
-      playersLimit: 4,
-      sportType: 'badminton'
-    }))
-
-    await Venue.bulkCreate(venuesPayload)
+    await Club.create({ name, timeZone, bookingDays })
 
     res.status(201).json({ message: 'Club created successfully.' })
   })

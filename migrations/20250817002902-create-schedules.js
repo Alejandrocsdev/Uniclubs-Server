@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      club_id: {
+      venue_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // Matches the 'clubs' table in the Club model
-        references: { model: 'clubs', key: 'id' },
+        // Matches the 'venues' table in the Venue model
+        references: { model: 'venues', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
@@ -33,18 +33,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      booking_days: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
       status: {
         allowNull: false,
         type: Sequelize.STRING,
         defaultValue: 'closed'
-      },
-      auto_rule_date: {
-        allowNull: false,
-        type: Sequelize.DATEONLY
       },
       created_at: {
         allowNull: false,

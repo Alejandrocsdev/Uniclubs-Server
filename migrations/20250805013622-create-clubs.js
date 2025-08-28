@@ -18,6 +18,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      booking_days: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

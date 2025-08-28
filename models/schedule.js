@@ -3,9 +3,9 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Schedule extends Model {
     static associate(models) {
-      Schedule.belongsTo(models.Club, {
-        foreignKey: { name: 'clubId', field: 'club_id' },
-        as: 'club',
+      Schedule.belongsTo(models.Venue, {
+        foreignKey: { name: 'venueId', field: 'venue_id' },
+        as: 'venue',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
@@ -19,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Schedule.init(
     {
-      clubId: {
+      venueId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'club_id'
+        field: 'venue_id'
       },
       startDate: {
         allowNull: false,
@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       endDate: {
         allowNull: true,
         type: DataTypes.DATEONLY,
+        defaultValue: null,
         field: 'end_date'
       },
       slotDuration: {
@@ -44,20 +45,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         field: 'slot_break'
       },
-      bookingDays: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        field: 'booking_days'
-      },
       status: {
         allowNull: false,
         type: DataTypes.STRING,
         defaultValue: 'closed'
-      },
-      autoRuleDate: {
-        allowNull: false,
-        type: DataTypes.DATEONLY,
-        field: 'auto_rule_date'
       }
     },
     {

@@ -12,7 +12,7 @@ module.exports = {
       slot_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // Matches the 'venues' table in the Venue model
+        // Matches the 'slots' table in the Slot model
         references: { model: 'slots', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -34,9 +34,10 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'beginner'
       },
-      status: {
+      active: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       created_at: {
         allowNull: false,

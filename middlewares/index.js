@@ -1,8 +1,23 @@
+const cors = require('./cors')
 const otpAuth = require('./otpAuth')
 const jwtAuth = require('./jwtAuth')
-const rateLimiter = require('./rateLimiter')
+const checkId = require('./checkId')
+const validate = require('./validate')
 const asyncError = require('./asyncError')
-const defaultRoute = require('./defaultRoute')
 const globalError = require('./globalError')
+const rateLimiter = require('./rateLimiter')
+const defaultRoute = require('./defaultRoute')
+const { pwdAuth } = require('./passport')
 
-module.exports = { otpAuth, jwtAuth, rateLimiter, asyncError, defaultRoute, globalError }
+module.exports = {
+  cors,
+  otpAuth,
+  jwtAuth,
+  pwdAuth,
+  checkId,
+  validate,
+  asyncError,
+  globalError,
+  rateLimiter,
+  defaultRoute
+}

@@ -4,7 +4,10 @@ const router = Router()
 const { clubController } = require('../controllers')
 
 // Middlewares
-const { jwtAuth } = require('../middlewares')
+const { checkId, jwtAuth } = require('../middlewares')
+
+// Validate clubId
+router.param('clubId', checkId)
 
 router.get('/', jwtAuth(), clubController.getClubs)
 router.get('/:clubId', jwtAuth(), clubController.getClub)

@@ -42,16 +42,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER
       },
-      status: {
+      active: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {
       sequelize,
       modelName: 'Slot',
       tableName: 'slots',
-      underscored: true
+      underscored: true,
+      defaultScope: {
+        include: [{ association: 'bookings', attributes: { exclude: ['createdAt', 'updatedAt'] } }]
+      }
     }
   )
 

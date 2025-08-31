@@ -1,5 +1,5 @@
 // Models
-const { Club, Token, User, Role, Venue } = require('../models')
+const { sequelize, Club, Token, User, Role } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -30,27 +30,34 @@ class OwnerController {
     const hashedToken = encrypt.sha256(token)
     const expireTime = Date.now() + 24 * 60 * 60 * 1000
 
-    const tokenRecord = await Token.findOne({ where: { clubId, email } })
+    await sequelize.transaction(async t => {
+      const tokenRecord = await Token.findOne({
+        where: { clubId, email },
+        transaction: t,
+        lock: t.LOCK.UPDATE
+      })
 
-    if (tokenRecord) {
-      // Case 1: Token already exists — update its token and expiration time
-      await tokenRecord.update({ token: hashedToken, expireTime })
-    } else {
-      // lt: less than
-      // Case 2: ClubId/Email do not exist — check for any expired record to reuse
-      const expiredRecord = await Token.findOne({ where: { expireTime: { [Op.lt]: Date.now() } } })
-      if (expiredRecord) {
-        // Case 2a: Found expired record — update it with new email, token, and expiration time
-        await expiredRecord.update({ clubId, token: hashedToken, email, expireTime })
+      if (tokenRecord) {
+        await tokenRecord.update({ token: hashedToken, expireTime }, { transaction: t })
       } else {
-        // Case 2b: No expired record — create a new token entry
-        await Token.create({ clubId, token: hashedToken, email, expireTime })
+        const expiredRecord = await Token.findOne({
+          where: { expireTime: { [Op.lt]: Date.now() } },
+          transaction: t,
+          lock: t.LOCK.UPDATE
+        })
+
+        if (expiredRecord) {
+          await expiredRecord.update({ clubId, email, token: hashedToken, expireTime }, { transaction: t })
+        } else {
+          await Token.create({ clubId, email, token: hashedToken, expireTime }, { transaction: t })
+        }
       }
-    }
 
-    const link = `${clientUrl}/sign-up?token=${token}`
-
-    await sendMail({ email, link, club: club.name }, 'adminLink')
+      t.afterCommit(async () => {
+        const link = `${clientUrl}/sign-up?token=${token}`
+        await sendMail({ email, link, club: club.name }, 'adminLink')
+      })
+    })
 
     res.status(200).json({ message: 'Admin sign-up link sent successfully.' })
   })
@@ -58,23 +65,29 @@ class OwnerController {
   makeAdmin = asyncError(async (req, res) => {
     const { uid, username, email, clubId } = req.body
 
-    const user = await User.findOne({ where: { uid } })
-    if (!user) throw new CustomError(404, 'User not found.')
+    await sequelize.transaction(async t => {
+      const user = await User.findOne({
+        where: { uid },
+        transaction: t,
+        lock: t.LOCK.UPDATE
+      })
+      if (!user) throw new CustomError(404, 'User not found.')
 
-    if (user.username !== username) throw new CustomError(400, 'Username does not match this user.')
-    if (user.email !== email) throw new CustomError(400, 'Email does not match this user.')
+      if (user.username !== username) throw new CustomError(400, 'Username does not match this user.')
+      if (user.email !== email) throw new CustomError(400, 'Email does not match this user.')
 
-    const role = await Role.findOne({ where: { name: 'admin' } })
-    if (!role) throw new CustomError(500, 'User role not found.')
+      const role = await Role.findOne({ where: { name: 'admin' }, transaction: t })
+      if (!role) throw new CustomError(500, 'User role not found.')
 
-    const club = await Club.findByPk(clubId)
-    if (!club) throw new CustomError(404, 'Club not found.')
+      const club = await Club.findByPk(clubId, { transaction: t })
+      if (!club) throw new CustomError(404, 'Club not found.')
 
-    const isAdmin = await !user.hasRole(role)
-    if (!isAdmin) await user.addRole(role)
+      const isAdmin = await user.hasRole(role, { transaction: t })
+      if (!isAdmin) await user.addRole(role, { transaction: t })
 
-    const hasClub = await user.hasClub(club)
-    if (!hasClub) await user.addClub(club)
+      const hasClub = await user.hasClub(club, { transaction: t })
+      if (!hasClub) await user.addClub(club, { transaction: t })
+    })
 
     res.status(200).json({ message: 'Admin role and club added to user successfully.' })
   })

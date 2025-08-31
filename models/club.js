@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
       bookingDays: {
         allowNull: false,
         type: DataTypes.INTEGER
+      },
+      active: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {

@@ -39,9 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'beginner',
         validate: { isIn: [['beginner', 'intermediate', 'advanced']] }
       },
-      status: {
+      active: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {

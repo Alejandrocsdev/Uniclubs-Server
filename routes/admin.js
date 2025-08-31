@@ -4,13 +4,15 @@ const router = Router()
 const { adminController } = require('../controllers')
 
 // Middlewares
-const { jwtAuth } = require('../middlewares')
+const { checkId, jwtAuth, validate } = require('../middlewares')
+// Schemas
+const { createVenues, createSchedules } = require('../schemas/admin')
 
-router.patch('/schedule', jwtAuth('admin'), adminController.updateSchedule)
-// router.patch('/events', jwtAuth('admin'), adminController.updateEvents)
-// router.patch('/venues', jwtAuth('admin'), adminController.updateVenues)
-// router.patch('/slots', jwtAuth('admin'), adminController.updateSlots)
-// router.patch('/bookings', jwtAuth('admin'), adminController.updateBookings)
+// Validate clubId, venueId
+const ids = ['clubId', 'venueId']
+ids.forEach(id => router.param(id, checkId))
 
+router.post('/clubs/:clubId/venues', jwtAuth('admin'), validate(createVenues), adminController.createVenues)
+router.post('/venues/:venueId/schedules', jwtAuth('admin'), validate(createSchedules), adminController.createSchedules)
 
 module.exports = router

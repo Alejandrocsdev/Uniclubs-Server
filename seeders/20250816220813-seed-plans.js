@@ -8,7 +8,7 @@ const plansData = [
     duration_days: 1,
     price_cents: 1500,
     currency: 'EUR',
-    status: 'active'
+    active: false
   },
   {
     club_id: 1,
@@ -17,7 +17,7 @@ const plansData = [
     duration_days: 14,
     price_cents: 7000,
     currency: 'EUR',
-    status: 'active'
+    active: false
   },
   {
     club_id: 1,
@@ -26,7 +26,7 @@ const plansData = [
     duration_days: 60,
     price_cents: 18900,
     currency: 'EUR',
-    status: 'active'
+    active: true
   },
 
   {
@@ -36,7 +36,7 @@ const plansData = [
     duration_days: 1,
     price_cents: 30000,
     currency: 'TWD',
-    status: 'active'
+    active: true
   },
   {
     club_id: 2,
@@ -45,7 +45,7 @@ const plansData = [
     duration_days: 30,
     price_cents: 250000,
     currency: 'TWD',
-    status: 'active'
+    active: true
   },
   {
     club_id: 2,
@@ -54,7 +54,7 @@ const plansData = [
     duration_days: 180,
     price_cents: 1200000,
     currency: 'TWD',
-    status: 'active'
+    active: true
   },
 
   {
@@ -64,7 +64,7 @@ const plansData = [
     duration_days: 3,
     price_cents: 5000,
     currency: 'TWD',
-    status: 'active'
+    active: true
   },
   {
     club_id: 3,
@@ -73,7 +73,7 @@ const plansData = [
     duration_days: 30,
     price_cents: 200000,
     currency: 'TWD',
-    status: 'active'
+    active: true
   },
   {
     club_id: 3,
@@ -82,7 +82,7 @@ const plansData = [
     duration_days: 90,
     price_cents: 540000,
     currency: 'TWD',
-    status: 'active'
+    active: true
   }
 ]
 

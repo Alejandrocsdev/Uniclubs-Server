@@ -1,5 +1,5 @@
 // Models
-const { User, Otp, Role, Token, Club } = require('../models')
+const { sequelize, User, Otp, Role, Token, Club } = require('../models')
 // Sequelize Operations
 const { Op } = require('sequelize')
 // Middlewares
@@ -56,25 +56,28 @@ class AuthController {
     const hashedPwd = await encrypt.hash(password)
     const attempts = 3
 
-    for (let i = 0; i < attempts; i++) {
-      const uid = encrypt.uid()
+    await sequelize.transaction(async t => {
+      for (let i = 0; i < attempts; i++) {
+        const uid = encrypt.uid()
 
-      try {
-        const user = await User.create({ uid, username, password: hashedPwd, email })
+        try {
+          const user = await User.create({ uid, username, password: hashedPwd, email }, { transaction: t })
 
-        await user.addRole(role)
+          await user.addRole(role, { transaction: t })
 
-        await otp.update({ expireTime: Date.now() })
+          await otp.update({ expireTime: Date.now() }, { transaction: t })
 
-        return res.status(201).json({ message: 'User registered successfully.' })
-      } catch (error) {
-        if (error.name === 'SequelizeUniqueConstraintError' && error.fields?.uid) {
-          if (i < attempts - 1) continue
-          throw new CustomError(500, 'uid generation failed.')
+          break
+        } catch (error) {
+          if (error.name === 'SequelizeUniqueConstraintError' && error.fields?.uid) {
+            if (i < attempts - 1) continue
+            throw new CustomError(500, 'uid generation failed.')
+          }
+          throw error
         }
-        throw error
       }
-    }
+    })
+    res.status(201).json({ message: 'User registered successfully.' })
   })
 
   signUpAdmin = asyncError(async (req, res) => {
@@ -97,25 +100,28 @@ class AuthController {
     const hashedPwd = await encrypt.hash(password)
     const attempts = 3
 
-    for (let i = 0; i < attempts; i++) {
-      const uid = encrypt.uid()
+    await sequelize.transaction(async t => {
+      for (let i = 0; i < attempts; i++) {
+        const uid = encrypt.uid()
 
-      try {
-        const user = await User.create({ uid, username, password: hashedPwd, email })
+        try {
+          const user = await User.create({ uid, username, password: hashedPwd, email }, { transaction: t })
 
-        await user.addRoles(roles)
-        await user.addClub(club)
-        await otp.update({ expireTime: Date.now() })
+          await user.addRoles(roles, { transaction: t })
+          await user.addClub(club, { transaction: t })
+          await otp.update({ expireTime: Date.now() }, { transaction: t })
 
-        return res.status(201).json({ message: 'Admin registered successfully.' })
-      } catch (error) {
-        if (error.name === 'SequelizeUniqueConstraintError' && error.fields?.uid) {
-          if (i < attempts - 1) continue
-          throw new CustomError(500, 'uid generation failed.')
+          break
+        } catch (error) {
+          if (error.name === 'SequelizeUniqueConstraintError' && error.fields?.uid) {
+            if (i < attempts - 1) continue
+            throw new CustomError(500, 'uid generation failed.')
+          }
+          throw error
         }
-        throw error
       }
-    }
+    })
+    res.status(201).json({ message: 'Admin registered successfully.' })
   })
 
   signOut = asyncError(async (req, res) => {
@@ -137,27 +143,34 @@ class AuthController {
     const hashedOtp = await encrypt.hash(otp)
     const expireTime = Date.now() + 15 * 60 * 1000
 
-    const otpRecord = await Otp.findOne({ where: { email, purpose } })
+    await sequelize.transaction(async t => {
+      const otpRecord = await Otp.findOne({ where: { email, purpose }, transaction: t, lock: t.LOCK.UPDATE })
 
-    if (otpRecord) {
-      // Case 1: OTP already exists — update its OTP and expiration time
-      await otpRecord.update({ otp: hashedOtp, expireTime })
-    } else {
-      // lt: less than
-      // Case 2: Email does not exists — check for any expired record to reuse
-      const expiredRecord = await Otp.findOne({ where: { expireTime: { [Op.lt]: Date.now() } } })
-      if (expiredRecord) {
-        // Case 2a: Found expired record — update it with new email, OTP, and expiration time
-        await expiredRecord.update({ otp: hashedOtp, email, expireTime, purpose })
+      if (otpRecord) {
+        // Case 1: OTP already exists — update its OTP and expiration time
+        await otpRecord.update({ otp: hashedOtp, expireTime }, { transaction: t })
       } else {
-        // Case 2b: No expired record — create a new OTP entry
-        await Otp.create({ otp: hashedOtp, email, expireTime, purpose })
+        // lt: less than
+        // Case 2: Email does not exists — check for any expired record to reuse
+        const expiredRecord = await Otp.findOne({
+          where: { expireTime: { [Op.lt]: Date.now() } },
+          transaction: t,
+          lock: t.LOCK.UPDATE,
+          skipLocked: true // <-- prevents blocking on the same expired row
+        })
+        if (expiredRecord) {
+          // Case 2a: Found expired record — update it with new email, OTP, and expiration time
+          await expiredRecord.update({ otp: hashedOtp, email, expireTime, purpose }, { transaction: t })
+        } else {
+          // Case 2b: No expired record — create a new OTP entry
+          await Otp.create({ otp: hashedOtp, email, expireTime, purpose }, { transaction: t })
+        }
       }
-    }
 
-    // Sends OTP via email
-    await sendMail({ email, otp }, 'otp')
-
+      t.afterCommit(async () => {
+        await sendMail({ email, otp }, 'otp')
+      })
+    })
     res.status(200).json({ message: 'Email sent successfully.' })
   })
 
@@ -167,10 +180,13 @@ class AuthController {
 
     const hashedPwd = await encrypt.hash(password)
 
-    await Promise.all([
-      User.update({ password: hashedPwd }, { where: { email } }),
-      otp.update({ expireTime: Date.now() })
-    ])
+    await sequelize.transaction(async t => {
+      const user = await User.findOne({ where: { email }, transaction: t, lock: t.LOCK.UPDATE })
+      if (!user) throw new CustomError(404, 'No account is associated with this email address.')
+
+      await user.update({ password: hashedPwd }, { transaction: t })
+      await otp.update({ expireTime: Date.now() }, { transaction: t })
+    })
 
     res.status(200).json({ message: 'User password reset successfully.' })
   })
@@ -179,13 +195,16 @@ class AuthController {
     const { email } = req.body
     const { otp } = req
 
-    const user = await User.findOne({ where: { email } })
-    if (!user) throw new CustomError(404, 'No account is associated with this email address.')
+    await sequelize.transaction(async t => {
+      const user = await User.findOne({ where: { email } }, { transaction: t, lock: t.LOCK.SHARE })
+      if (!user) throw new CustomError(404, 'No account is associated with this email address.')
 
-    await Promise.all([
-      sendMail({ email, username: user.username }, 'username'),
-      otp.update({ expireTime: Date.now() })
-    ])
+      await otp.update({ expireTime: Date.now() }, { transaction: t })
+
+      t.afterCommit(async () => {
+        await sendMail({ email, username: user.username }, 'username')
+      })
+    })
 
     res.status(200).json({ message: 'User username sent successfully.' })
   })

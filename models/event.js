@@ -52,10 +52,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.TIME,
         field: 'end_time'
-      },
-      status: {
-        allowNull: false,
-        type: DataTypes.STRING
       }
     },
     {

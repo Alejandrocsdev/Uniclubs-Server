@@ -1,7 +1,7 @@
 // Libraries
 const cors = require('cors')
 // Utilities
-const { clientUrl } = require('../../utils')
+const { clientUrl } = require('../utils')
 
 const allowedOrigins = [clientUrl]
 

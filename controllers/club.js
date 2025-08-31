@@ -22,14 +22,6 @@ class ClubController {
 
     res.status(200).json({ message: 'Club retrieved successfully.', club: club.getSafeData() })
   })
-
-  createClub = asyncError(async (req, res) => {
-    const { name, timeZone } = req.body
-
-    await Club.create({ name, timeZone })
-
-    res.status(201).json({ message: 'Club created successfully.' })
-  })
 }
 
 module.exports = new ClubController()

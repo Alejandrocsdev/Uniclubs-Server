@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultScope: {
         include: [
           { association: 'roles', attributes: ['name'] },
-          { association: 'clubs', attributes: ['id', 'name', 'time_zone'] }
+          { association: 'clubs', attributes: ['id', 'name', 'time_zone'], through: { attributes: [] } }
         ]
       }
     }

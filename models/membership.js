@@ -39,9 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         field: 'end_date'
       },
-      status: {
-        allowNull: true,
-        type: DataTypes.STRING
+      active: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {

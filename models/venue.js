@@ -43,13 +43,24 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.STRING,
         field: 'sport_type'
+      },
+      active: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN
       }
     },
     {
       sequelize,
       modelName: 'Venue',
       tableName: 'venues',
-      underscored: true
+      underscored: true,
+      indexes: [{ unique: true, fields: ['clubId', 'name'] }],
+      defaultScope: {
+        include: [
+          { association: 'slots', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+          { association: 'schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } }
+        ]
+      }
     }
   )
 

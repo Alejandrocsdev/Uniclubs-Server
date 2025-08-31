@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       endDate: {
         allowNull: true,
         type: DataTypes.DATEONLY,
-        defaultValue: null,
         field: 'end_date'
       },
       slotDuration: {
@@ -44,18 +43,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: 'slot_break'
-      },
-      status: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        defaultValue: 'closed'
       }
     },
     {
       sequelize,
       modelName: 'Schedule',
       tableName: 'schedules',
-      underscored: true
+      underscored: true,
+      defaultScope: {
+        include: [{ association: 'events', attributes: { exclude: ['createdAt', 'updatedAt'] } }]
+      }
     }
   )
 

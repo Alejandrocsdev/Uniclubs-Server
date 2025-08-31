@@ -44,9 +44,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         field: 'sport_type'
       },
-      active: {
+      status: {
         allowNull: false,
-        type: DataTypes.BOOLEAN
+        type: DataTypes.STRING,
+        defaultValue: 'draft',
+        validate: { isIn: [['draft', 'enabled', 'disabled']] }
       }
     },
     {

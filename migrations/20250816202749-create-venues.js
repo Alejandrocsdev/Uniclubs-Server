@@ -29,9 +29,10 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      active: {
+      status: {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.STRING,
+        defaultValue: 'draft'
       },
       created_at: {
         allowNull: false,

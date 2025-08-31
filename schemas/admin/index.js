@@ -11,11 +11,6 @@ const requiredNumber = label => ({
   'any.required': `${label} is required`
 })
 
-const requiredBoolean = label => ({
-  'boolean.base': `${label} must be a boolean`,
-  'any.required': `${label} is required`
-})
-
 const name = () =>
   Joi.string()
     .trim()
@@ -50,14 +45,6 @@ const sportType = () =>
       'any.only': `Sport type must be one of: ${SPORT_TYPES.join(', ')}`
     })
 
-const active = () =>
-  Joi.boolean()
-    .required()
-    .strict()
-    .messages({
-      ...requiredBoolean('Active')
-    })
-
 const TIME_24H = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/
 
 const time = (label = 'Time') =>
@@ -75,17 +62,17 @@ const time = (label = 'Time') =>
 const slotDuration = () =>
   Joi.number().integer().min(10).max(60).optional().messages({
     'number.base': 'Slot duration must be a number',
-    'number.integer': 'Booking days must be an integer',
-    'number.min': 'Booking days must be at least 10',
-    'number.max': 'Booking days must be at most 60'
+    'number.integer': 'Slot duration must be an integer',
+    'number.min': 'Slot duration must be at least 10',
+    'number.max': 'Slot duration must be at most 60'
   })
 
 const slotBreak = () =>
-  Joi.number().integer().min(5).max(30).optional().messages({
-    'number.base': 'Booking days must be a number',
-    'number.integer': 'Booking days must be an integer',
-    'number.min': 'Booking days must be at least 5',
-    'number.max': 'Booking days must be at most 30'
+  Joi.number().integer().min(0).max(30).optional().messages({
+    'number.base': 'Slot break must be a number',
+    'number.integer': 'Slot break must be an integer',
+    'number.min': 'Slot break must be at least 0',
+    'number.max': 'Slot break must be at most 30'
   })
 
 const code = () =>
@@ -102,10 +89,10 @@ const code = () =>
 
 const durationDays = () =>
   Joi.number().integer().min(1).max(365).optional().messages({
-    'number.base': 'Slot duration must be a number',
-    'number.integer': 'Booking days must be an integer',
-    'number.min': 'Booking days must be at least 1',
-    'number.max': 'Booking days must be at most 365'
+    'number.base': 'Duration days must be a number',
+    'number.integer': 'Duration days must be an integer',
+    'number.min': 'Duration days must be at least 1',
+    'number.max': 'Duration days must be at most 365'
   })
 
 const MIN_PRICE_CENTS = 0
@@ -142,11 +129,34 @@ const currency = () =>
       'string.currency': 'Currency must be a valid ISO 4217 code'
     })
 
+const status = (mode = 'put') => {
+  const allowed = mode === 'put' ? ['draft', 'enabled', 'disabled'] : ['enabled', 'disabled']
+
+  return Joi.string()
+    .trim()
+    .valid(...allowed)
+    .required()
+    .messages({
+      ...requiredString('Status'),
+      'any.only': `Status must be one of: ${allowed.join(', ')}`
+    })
+}
+
+const id = () =>
+  Joi.number()
+    .integer()
+    .min(1)
+    .required()
+    .messages({
+      ...requiredNumber('ID'),
+      'number.integer': 'ID must be an integer',
+      'number.min': 'ID must be at least 1'
+    })
+
 const venueItem = Joi.object({
   name: name(),
   sportType: sportType(),
-  playersLimit: playersLimit(),
-  active: active()
+  playersLimit: playersLimit()
 })
   .custom((venue, helpers) => {
     const allowedSet = SPORT_ALLOWED[venue.sportType]
@@ -172,7 +182,7 @@ const createVenues = {
   })
 }
 
-const createRules = {
+const createRule = {
   body: Joi.object({
     openTime: time(),
     closeTime: time(),
@@ -181,7 +191,7 @@ const createRules = {
   })
 }
 
-const createPlans = {
+const createPlan = {
   body: Joi.object({
     code: code(),
     name: name(),
@@ -191,4 +201,27 @@ const createPlans = {
   })
 }
 
-module.exports = { createVenues, createRules, createPlans }
+const updatePlan = {
+  body: Joi.object({
+    code: code(),
+    name: name(),
+    durationDays: durationDays(),
+    priceCents: priceCents(),
+    currency: currency(),
+    status: status('put')
+  })
+}
+
+const updatePlanStatus = {
+  body: Joi.object({
+    status: status('patch')
+  })
+}
+
+const addMember = {
+  body: Joi.object({
+    planId: id()
+  })
+}
+
+module.exports = { createVenues, createRule, createPlan, updatePlan, updatePlanStatus, addMember }

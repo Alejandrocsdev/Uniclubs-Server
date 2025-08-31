@@ -71,11 +71,11 @@ module.exports = (sequelize, DataTypes) => {
           { association: 'clubs', attributes: ['id', 'name', 'time_zone'], through: { attributes: [] } },
           {
             association: 'memberships',
-            attributes: ['id', 'startDate', 'endDate', 'active'],
+            attributes: ['id', 'startDate', 'endDate'],
             include: [
               {
                 association: 'plan',
-                attributes: ['id', 'code', 'name', 'durationDays', 'priceCents', 'currency', 'active'],
+                attributes: ['id', 'code', 'name', 'durationDays', 'priceCents', 'currency', 'status'],
                 include: [{ association: 'club', attributes: ['id', 'name', 'time_zone'] }]
               }
             ]

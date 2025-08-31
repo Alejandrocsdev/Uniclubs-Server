@@ -1,6 +1,6 @@
 'use strict'
 
-const roles = ['guest', 'user', 'admin', 'owner']
+const roles = ['user', 'admin', 'owner']
 const rolesData = roles.map(role => ({ name: role }))
 
 module.exports = {

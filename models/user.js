@@ -68,7 +68,18 @@ module.exports = (sequelize, DataTypes) => {
       defaultScope: {
         include: [
           { association: 'roles', attributes: ['name'] },
-          { association: 'clubs', attributes: ['id', 'name', 'time_zone'], through: { attributes: [] } }
+          { association: 'clubs', attributes: ['id', 'name', 'time_zone'], through: { attributes: [] } },
+          {
+            association: 'memberships',
+            attributes: ['id', 'startDate', 'endDate', 'active'],
+            include: [
+              {
+                association: 'plan',
+                attributes: ['id', 'code', 'name', 'durationDays', 'priceCents', 'currency', 'active'],
+                include: [{ association: 'club', attributes: ['id', 'name', 'time_zone'] }]
+              }
+            ]
+          }
         ]
       }
     }
@@ -77,8 +88,9 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.getSafeData = function () {
     // Omit password, refreshToken, date
     // Convert roles to an array of role names
-    const { id, uid, username, email, roles, clubs } = this
-    return { id, uid, username, email, roles: roles.map(role => role.name), clubs }
+    const { id, uid, username, email, roles, clubs, memberships } = this
+
+    return { id, uid, username, email, roles: roles.map(role => role.name), clubs, memberships }
   }
 
   return User

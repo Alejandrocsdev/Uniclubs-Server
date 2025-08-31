@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
-      Venue.hasMany(models.Schedule, {
+      Venue.hasMany(models.Rule, {
         foreignKey: { name: 'venueId', field: 'venue_id' },
-        as: 'schedules',
+        as: 'rules',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultScope: {
         include: [
           { association: 'slots', attributes: { exclude: ['createdAt', 'updatedAt'] } },
-          { association: 'schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } }
+          { association: 'rules', attributes: { exclude: ['createdAt', 'updatedAt'] } }
         ]
       }
     }

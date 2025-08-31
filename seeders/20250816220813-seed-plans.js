@@ -28,35 +28,33 @@ const plansData = [
     currency: 'EUR',
     active: true
   },
-
-  {
-    club_id: 2,
-    code: '1D',
-    name: 'Day Pass',
-    duration_days: 1,
-    price_cents: 30000,
-    currency: 'TWD',
-    active: true
-  },
-  {
-    club_id: 2,
-    code: '1M',
-    name: '1-Month Membership',
-    duration_days: 30,
-    price_cents: 250000,
-    currency: 'TWD',
-    active: true
-  },
-  {
-    club_id: 2,
-    code: '6M',
-    name: '6-Month Membership',
-    duration_days: 180,
-    price_cents: 1200000,
-    currency: 'TWD',
-    active: true
-  },
-
+  // {
+  //   club_id: 2,
+  //   code: '1D',
+  //   name: 'Day Pass',
+  //   duration_days: 1,
+  //   price_cents: 30000,
+  //   currency: 'TWD',
+  //   active: true
+  // },
+  // {
+  //   club_id: 2,
+  //   code: '1M',
+  //   name: '1-Month Membership',
+  //   duration_days: 30,
+  //   price_cents: 250000,
+  //   currency: 'TWD',
+  //   active: true
+  // },
+  // {
+  //   club_id: 2,
+  //   code: '6M',
+  //   name: '6-Month Membership',
+  //   duration_days: 180,
+  //   price_cents: 1200000,
+  //   currency: 'TWD',
+  //   active: true
+  // },
   {
     club_id: 3,
     code: 'TRI',

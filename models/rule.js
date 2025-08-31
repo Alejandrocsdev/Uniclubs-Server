@@ -1,23 +1,23 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-  class Schedule extends Model {
+  class Rule extends Model {
     static associate(models) {
-      Schedule.belongsTo(models.Venue, {
+      Rule.belongsTo(models.Venue, {
         foreignKey: { name: 'venueId', field: 'venue_id' },
         as: 'venue',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
-      Schedule.hasMany(models.Event, {
-        foreignKey: { name: 'scheduleId', field: 'schedule_id' },
+      Rule.hasMany(models.Event, {
+        foreignKey: { name: 'ruleId', field: 'rule_id' },
         as: 'events',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       })
     }
   }
-  Schedule.init(
+  Rule.init(
     {
       venueId: {
         allowNull: false,
@@ -34,6 +34,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATEONLY,
         field: 'end_date'
       },
+      openTime: {
+        allowNull: false,
+        type: DataTypes.TIME,
+        field: 'open_time'
+      },
+      closeTime: {
+        allowNull: false,
+        type: DataTypes.TIME,
+        field: 'close_time'
+      },
       slotDuration: {
         allowNull: false,
         type: DataTypes.INTEGER,
@@ -47,8 +57,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Schedule',
-      tableName: 'schedules',
+      modelName: 'Rule',
+      tableName: 'rules',
       underscored: true,
       defaultScope: {
         include: [{ association: 'events', attributes: { exclude: ['createdAt', 'updatedAt'] } }]
@@ -56,5 +66,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
-  return Schedule
+  return Rule
 }

@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('schedules', {
+    await queryInterface.createTable('rules', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,6 +25,14 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATEONLY
       },
+      open_time: {
+        allowNull: false,
+        type: Sequelize.TIME
+      },
+      close_time: {
+        allowNull: false,
+        type: Sequelize.TIME
+      },
       slot_duration: {
         allowNull: false,
         type: Sequelize.INTEGER
@@ -46,6 +54,6 @@ module.exports = {
     })
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('schedules')
+    await queryInterface.dropTable('rules')
   }
 }

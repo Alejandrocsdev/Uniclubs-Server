@@ -50,9 +50,9 @@ const id = () =>
     .min(1)
     .required()
     .messages({
-      ...requiredNumber('Club id'),
-      'number.integer': 'Club id must be an integer',
-      'number.min': 'Club id must be at least 1'
+      ...requiredNumber('ID'),
+      'number.integer': 'ID must be an integer',
+      'number.min': 'ID must be at least 1'
     })
 
 const email = () =>

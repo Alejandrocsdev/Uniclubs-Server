@@ -3,9 +3,9 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     static associate(models) {
-      Event.belongsTo(models.Schedule, {
-        foreignKey: { name: 'scheduleId', field: 'schedule_id' },
-        as: 'schedule',
+      Event.belongsTo(models.Rule, {
+        foreignKey: { name: 'ruleId', field: 'rule_id' },
+        as: 'rule',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       })
@@ -13,10 +13,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Event.init(
     {
-      scheduleId: {
+      ruleId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: 'schedule_id'
+        field: 'rule_id'
       },
       name: {
         allowNull: false,

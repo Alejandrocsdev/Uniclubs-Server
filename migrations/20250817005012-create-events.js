@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      schedule_id: {
+      rule_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // Matches the 'schedules' table in the Schedule model
-        references: { model: 'schedules', key: 'id' },
+        // Matches the 'rules' table in the Rule model
+        references: { model: 'rules', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },

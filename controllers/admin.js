@@ -1,5 +1,5 @@
 // Models
-const { sequelize, Venue, Club, Schedule } = require('../models')
+const { sequelize, Venue, Club, Rule, Plan } = require('../models')
 // Middlewares
 const { asyncError } = require('../middlewares')
 // Errors
@@ -27,7 +27,7 @@ class AdminController {
     }
 
     const rows = venues.map(venue => ({
-      clubId: Number(clubId),
+      clubId: clubId,
       name: venue.name,
       playersLimit: venue.playersLimit,
       sportType: venue.sportType,
@@ -39,9 +39,9 @@ class AdminController {
     res.status(201).json({ message: `Created ${created.length} venue(s).` })
   })
 
-  createSchedules = asyncError(async (req, res) => {
+  createRules = asyncError(async (req, res) => {
     const { venueId } = req.params
-    const { slotDuration, slotBreak } = req.body
+    const { openTime, closeTime, slotDuration, slotBreak } = req.body
     const { user } = req
 
     const venue = await Venue.findByPk(venueId, { attributes: ['id', 'clubId'] })
@@ -54,9 +54,22 @@ class AdminController {
     if (!hasAccess) throw new CustomError(403, 'No access to this club.')
 
     const startDate = date.today(club.timeZone)
-    await Schedule.create({ venueId, startDate, slotDuration, slotBreak })
+    await Rule.create({ venueId, startDate, openTime, closeTime, slotDuration, slotBreak })
 
-    res.status(201).json({ message: 'Schedule created successfully.' })
+    res.status(201).json({ message: 'Rule created successfully.' })
+  })
+
+  createPlans = asyncError(async (req, res) => {
+    const { clubId } = req.params
+    const { code, name, durationDays, priceCents, currency } = req.body
+
+    const { user } = req
+    const hasAccess = await user.hasClub(clubId)
+    if (!hasAccess) throw new CustomError(403, 'No access to this club.')
+
+    await Plan.create({ clubId, code, name, durationDays, priceCents, currency })
+
+    res.status(201).json({ message: 'Rule created successfully.' })
   })
 }
 

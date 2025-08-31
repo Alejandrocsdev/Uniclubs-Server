@@ -1,11 +1,11 @@
 'use strict'
 
 const userClubsData = [
-  { user_id: 7, club_id: 1 },
+  { user_id: 6, club_id: 1 },
+  { user_id: 7, club_id: 2 },
   { user_id: 8, club_id: 2 },
   { user_id: 9, club_id: 2 },
-  { user_id: 10, club_id: 2 },
-  { user_id: 10, club_id: 3 }
+  { user_id: 9, club_id: 3 }
 ]
 
 module.exports = {

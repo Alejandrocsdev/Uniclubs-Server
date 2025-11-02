@@ -14,12 +14,12 @@ const requiredNumber = label => ({
 const name = () =>
   Joi.string()
     .trim()
-    .min(4)
+		.min(1)
     .max(20)
     .required()
     .messages({
       ...requiredString('Username'),
-      'string.min': 'Name must be at least 4 characters',
+      'string.min': 'Name must be at least 1 characters',
       'string.max': 'Name must most 20 characters'
     })
 
